@@ -1,0 +1,13 @@
+# Python 캐시
+__pycache__/
+*.pyc
+
+# 환경 변수
+.env
+
+# 로그
+logs
+
+# IDE 설정
+.vscode/
+.idea/
