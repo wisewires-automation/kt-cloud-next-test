@@ -1,27 +1,24 @@
 from playwright.sync_api import Page, expect
-from utils.namer import make_name
 
-class VPCPage:
+class NICPage:
 
     # ===== selector / text 상수 =====
-    VPC_NAV_BUTTON_NAME = "VPC"
-    VPC_CREATE_BUTTON_NAME = "VPC 생성"
+    NIC_NAV_BUTTON_NAME = "NIC (Network Interface)"
+    NIC_CREATE_BUTTON_NAME = "NIC 생성"
 
-    VPC_NAME_INPUT = 'input[name="name"]'
-    VPC_CIDR_INPUT = 'input[name="cidr"]'
-    VPC_CIDR_PLACEHOLDER = "VPC CIDR을 입력해주세요"
+    NIC_NAME_INPUT = 'input[name="name"]' # NIC 이름
+    NIC_IP_INPUT = 'input[name="ipAddress"]' # 사설 IP
 
     CONFIRM_BUTTON_NAME = "확인"
-    VPC_CREATE_SUCCESS_TEXT = "VPC 생성 성공"
+    NIC_CREATE_SUCCESS_TEXT = "생성 완료"
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.vpc_nav_button = page.get_by_role("button", name=self.VPC_NAV_BUTTON_NAME, exact=True)
-        self.vpc_create_button = (page.locator("button").filter(has_text=self.VPC_CREATE_BUTTON_NAME).first)
+        self.vpc_nav_button = page.get_by_role("button", name=self.NIC_NAV_BUTTON_NAME, exact=True)
+        self.vpc_create_button = (page.locator("button").filter(has_text=self.NIC_CREATE_BUTTON_NAME).first)
 
-        self.name_input = page.locator(self.VPC_NAME_INPUT)
-        self.cidr_input = page.locator(self.VPC_CIDR_INPUT)
+        self.name_input = page.locator(self.NIC_NAME_INPUT)
 
         self.confirm_button = page.get_by_role("button",name=self.CONFIRM_BUTTON_NAME)
 
@@ -41,7 +38,7 @@ class VPCPage:
         expect(self.cidr_input).to_be_visible(timeout=timeout)
         self.cidr_input.fill(cidr)
 
-    def submit(self, timeout: int = 20000):
+    def submit(self, name: str, timeout: int = 20000):
         expect(self.confirm_button).to_be_enabled(timeout=timeout)
         self.confirm_button.click()
 

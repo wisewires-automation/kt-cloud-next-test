@@ -1,6 +1,7 @@
 # Python 캐시
 __pycache__/
 *.pyc
+.venv
 
 # 환경 변수
 .env

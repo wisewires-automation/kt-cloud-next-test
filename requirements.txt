@@ -1,4 +1,4 @@
 pytest
-pytest-playwright
 playwright
+pytest-playwright
 load_dotenv
