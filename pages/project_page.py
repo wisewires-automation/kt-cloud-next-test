@@ -6,8 +6,8 @@ class ProjectPage:
     # ===== selector / text 상수 =====
     NEW_PROJECT_HEADING_NAME = "새 프로젝트"
 
-    PROJECT_NAME_INPUT = 'input[name="name"]'
-    PROJECT_DESC_INPUT = 'input[name="description"]'
+    PROJECT_NAME_INPUT = 'input[name="name"]'           # 프로젝트 이름
+    PROJECT_DESC_INPUT = 'input[name="description"]'    # 프로젝트 설명
 
     CREATE_BUTTON_NAME = "생성"
     CREATE_SUCCESS_TEXT = "생성 완료"

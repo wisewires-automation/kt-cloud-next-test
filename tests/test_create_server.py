@@ -1,32 +1,34 @@
-import pytest, os, time
-from dotenv import load_dotenv
-
-from pages.auth_page import AuthPage
-from pages.project_page import ProjectPage
 from pages.server_page import ServerPage
-load_dotenv()
+from pages.nic_page import NICPage
+import time
 
-def test_create_vpc(page, log):
-    # 1) 로그인
-    url   = os.getenv("LOGIN_URL")
-    kt_id = os.getenv("KT_USER_ID")
-    kt_pw = os.getenv("KT_USER_PW")
+def test_create_server(project_opened_page, log):
+    page = project_opened_page
 
-    auth = AuthPage(page)
-
-    log.info("[KT] 로그인 시작")
-    auth.login_kt(url=url, user_id=kt_id, password=kt_pw)
-    log.info("[KT] 로그인 완료")
-
-    time.sleep(2)
-
-    # 2) 프로젝트 진입
-    project_page = ProjectPage(page)
-    project_name = "TEST_CREATE_SERVER"
-    log.info("프로젝트 페이지 진입 | 프로젝트명=%s", project_name)
-    project_page.open_project(project_name)
-
-    # 3) 서버 생성
     server_page = ServerPage(page)
+    nic_page = NICPage(page)
+
     log.info("서버 페이지 진입")
-    server_page.create_server(server_name="server-name-01", vpc_name="TEST_VPC_Z9K1")
+    server_page.go_server_page()
+
+    log.info("01. 서버 이미지 선택")
+    server_page.select_server_image(index=0)
+
+    log.info("02. 서버 스펙 선택")
+    server_page.select_server_spec(index=0)
+
+    log.info("03. 서버 기본 정보")
+    server_name = server_page.fill_basic_info()
+
+    log.info("04. 스토리지 설정")
+
+    log.info("05. 네트워크 구성")
+    server_page.select_vpc_option_by_index()
+    server_page.select_subnet_option_by_index()
+    server_page.select_nic()
+
+    log.info("06. 서버 접속 및 초기 설정")
+    server_page.select_kp_option(index=1)
+
+    log.info("서버 생성 완료 | 서버 이름=%s", server_name)
+    server_page.submit()

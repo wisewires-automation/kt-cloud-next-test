@@ -7,9 +7,8 @@ class VPCPage:
     VPC_NAV_BUTTON_NAME = "VPC"
     VPC_CREATE_BUTTON_NAME = "VPC 생성"
 
-    VPC_NAME_INPUT = 'input[name="name"]'
-    VPC_CIDR_INPUT = 'input[name="cidr"]'
-    VPC_CIDR_PLACEHOLDER = "VPC CIDR을 입력해주세요"
+    VPC_NAME_INPUT = 'input[name="name"]'           # VPC 이름
+    VPC_CIDR_INPUT = 'input[name="cidr"]'           # CIDR 주소
 
     CONFIRM_BUTTON_NAME = "확인"
     VPC_CREATE_SUCCESS_TEXT = "VPC 생성 성공"
@@ -52,7 +51,7 @@ class VPCPage:
         """VPC명 랜덤 생성 (예: TEST_VPC_Z9K1)"""
         vpc_name = make_name(prefix=name_prefix, suffix_len=4)
 
-        self.open_vpc_create(timeout=timeout)
-        self.fill_form(name=vpc_name, cidr=cidr, timeout=timeout)
-        self.submit(name=vpc_name, timeout=timeout)
+        self.open_vpc_create()
+        self.fill_form(name=vpc_name, cidr=cidr)
+        self.submit()
         return vpc_name

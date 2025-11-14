@@ -1,5 +1,6 @@
 # Python 캐시
 __pycache__/
+.pytest_cache
 *.pyc
 .venv
 

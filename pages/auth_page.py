@@ -3,9 +3,9 @@ from playwright.sync_api import Page, expect
 class AuthPage:
 
     # ===== selector / text 상수 =====
-    ORG_CODE_INPUT = 'input[name="orgCode"]'
-    USERNAME_INPUT = 'input[name="username"]'
-    PASSWORD_INPUT = 'input[name="password"]'
+    ORG_CODE_INPUT = 'input[name="orgCode"]'    # 조직 아이디
+    USERNAME_INPUT = 'input[name="username"]'   # 아이디
+    PASSWORD_INPUT = 'input[name="password"]'   # 비밀번호
 
     LOGIN_BUTTON_NAME = "로그인"
     LOGIN_SUCCESS_TEXT = "로그인 성공"

@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+from utils.namer import make_name
 
 class NICPage:
 
@@ -6,10 +7,13 @@ class NICPage:
     NIC_NAV_BUTTON_NAME = "NIC (Network Interface)"
     NIC_CREATE_BUTTON_NAME = "NIC 생성"
 
-    NIC_NAME_INPUT = 'input[name="name"]' # NIC 이름
-    NIC_IP_INPUT = 'input[name="ipAddress"]' # 사설 IP
+    NIC_NAME_INPUT = 'input[name="name"]'         # Network Interface 이름
+    NIC_IP_INPUT = 'input[name="ipAddress"]'      # 사설 IP
 
-    CONFIRM_BUTTON_NAME = "확인"
+    VPC_SELECT_NAME = "VPC를 선택해주세요."         # VPC 선택 Placeholder
+    SUBNET_SELECT_NAME = "Subnet을 선택해주세요."   # Subnet 선택 Placeholder
+
+    CONFIRM_BUTTON_NAME = "생성하기"
     NIC_CREATE_SUCCESS_TEXT = "생성 완료"
 
     def __init__(self, page: Page):
@@ -19,37 +23,53 @@ class NICPage:
         self.vpc_create_button = (page.locator("button").filter(has_text=self.NIC_CREATE_BUTTON_NAME).first)
 
         self.name_input = page.locator(self.NIC_NAME_INPUT)
+        self.ip_input = page.locator(self.NIC_IP_INPUT)
+
+        self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
+        self.subnet_select = (self.page.get_by_role("combobox").filter(has_text=self.SUBNET_SELECT_NAME).first)
+        self.options = self.page.locator(".s-select-options-container .s-select-item--option")
+
+        self.security_row = page.get_by_role("row").filter(has_text="default").first
+        self.security_checkbox = self.security_row.locator('input[type="checkbox"]').first
 
         self.confirm_button = page.get_by_role("button",name=self.CONFIRM_BUTTON_NAME)
 
     # ===== 공통 동작 =====
-    def open_vpc_create(self, timeout: int = 10000):
-        """VPC 메뉴 이동 후 'VPC 생성' 모달 오픈"""
+    def open_nic_create(self, timeout: int = 10000):
         expect(self.vpc_nav_button).to_be_visible(timeout=timeout)
         self.vpc_nav_button.click()
 
         expect(self.vpc_create_button).to_be_visible(timeout=timeout)
         self.vpc_create_button.click()
 
-    def fill_form(self, name: str, cidr: str, timeout: int = 10000):
-        expect(self.name_input).to_be_visible(timeout=timeout)
-        self.name_input.fill(name)
+    def select_vpc_option_by_index(self, idx: int = 0):
+        self.vpc_select.click()
+        self.options.nth(idx).click()
 
-        expect(self.cidr_input).to_be_visible(timeout=timeout)
-        self.cidr_input.fill(cidr)
+    def select_subnet_option_by_index(self, idx: int = 0):
+        self.subnet_select.click()
+        self.options.nth(idx).click()
 
-    def submit(self, name: str, timeout: int = 20000):
-        expect(self.confirm_button).to_be_enabled(timeout=timeout)
-        self.confirm_button.click()
+    def click_security_checkbox(self, timeout: int = 10000):
+        expect(self.security_checkbox).to_be_visible(timeout=timeout)
+        self.security_checkbox.click()
 
-        """VPC 생성 성공 토스트 검증"""
-        expect(self.page.get_by_text(self.VPC_CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
+    def submit(self, timeout: int = 20000):
+        # DOM에는 붙어 있는지 확인
+        expect(self.confirm_button).to_be_attached(timeout=timeout)
 
-    def create_vpc(self, name_prefix: str = "TEST_VPC", cidr: str = "10.0.0.0/8", timeout: int = 20000) -> str:
-        """VPC명 랜덤 생성 (예: TEST_VPC_Z9K1)"""
-        vpc_name = make_name(prefix=name_prefix, suffix_len=4)
+        # viewport에서 보이지 않아 강제 클릭
+        self.confirm_button.evaluate("el => el.click()")
 
-        self.open_vpc_create(timeout=timeout)
-        self.fill_form(name=vpc_name, cidr=cidr, timeout=timeout)
-        self.submit(name=vpc_name, timeout=timeout)
-        return vpc_name
+        expect(self.page.get_by_text(self.NIC_CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
+
+    def create_nic(self, name_prefix: str = "NIC-", timeout: int = 20000) -> str:
+        nic_name = make_name(prefix=name_prefix, suffix_len=4)
+
+        # self.open_nic_create()
+        self.name_input.fill(nic_name)
+        self.select_vpc_option_by_index()
+        self.select_subnet_option_by_index()
+        self.submit()
+
+        return nic_name
