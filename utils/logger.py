@@ -1,3 +1,7 @@
+"""
+logger.py에서 설정한 로깅은 콘솔 출력과 
+logs/test.log 파일에 함께 기록됨
+"""
 import logging, os
 from logging.handlers import RotatingFileHandler
 
