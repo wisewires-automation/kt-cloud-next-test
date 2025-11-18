@@ -1,6 +1,7 @@
 """ 사용자 POM """
 
 from playwright.sync_api import Page, expect
+import time
 
 class UserPage:
 
@@ -76,8 +77,12 @@ class UserPage:
     
     def create_user(self, id: str, name: str, email: str, phone: str, password: str) -> str:
         self.click_create_user_button()
+        time.sleep(3)
         self.fill_form(id, name, email, phone)
+        time.sleep(3)
         self.fill_pw_input(password)
+        time.sleep(3)
         self.submit()
+        time.sleep(3)
 
     

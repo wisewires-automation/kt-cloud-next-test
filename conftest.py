@@ -1,6 +1,7 @@
 import pytest, os, time, json
 from playwright.sync_api import sync_playwright
 from utils.logger import setup_logging, get_logger
+from utils.iam_user_config import load_iam_users, get_iam_user
 from dotenv import load_dotenv
 
 from pages.auth_page import AuthPage
@@ -37,12 +38,11 @@ def log(request):
 @pytest.fixture(scope="session")
 def iam_users():
     """여러 권한의 IAM 유저 정보 목록"""
-    with open("config/iam_project_role.json", "r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_iam_users()
     
 @pytest.fixture
 def iam_user_info(iam_users):
-    return iam_users["TEMP"]
+    return get_iam_user("TEMP")
 
 @pytest.fixture
 def kt_logged_in_page(page, log):

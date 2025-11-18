@@ -75,7 +75,7 @@ class SubnetPage:
             except Exception:
                 raise
 
-    def create_subnet(self, name_prefix: str = "SUBNET-", cidr: str = "10.0.0.0/8", vpc_name: str = "") -> str:
+    def create_subnet(self, name_prefix: str = "QA-SUB-", cidr: str = "10.0.0.0/8", vpc_name: str = "") -> str:
         subnet_name = make_name(prefix=name_prefix)
 
         # vpc 명이 있을 경우 이름으로 선택 없을 경우 pass

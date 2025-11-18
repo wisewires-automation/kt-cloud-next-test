@@ -65,7 +65,7 @@ class NICPage:
 
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
-    def create_nic(self, name_prefix: str = "NIC-", select_network: bool = False) -> str:
+    def create_nic(self, name_prefix: str = "QA-NIC-", select_network: bool = False) -> str:
         nic_name = make_name(prefix=name_prefix)
 
         self.name_input.fill(nic_name)

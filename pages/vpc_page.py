@@ -49,7 +49,7 @@ class VPCPage:
         """VPC 생성 성공 토스트 검증"""
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
-    def create_vpc(self, name_prefix: str = "TEST_VPC", cidr: str = "10.0.0.0/8") -> str:
+    def create_vpc(self, name_prefix: str = "QA-VPC", cidr: str = "10.0.0.0/8") -> str:
         vpc_name = make_name(prefix=name_prefix)
         
         self.fill_form(name=vpc_name, cidr=cidr)
