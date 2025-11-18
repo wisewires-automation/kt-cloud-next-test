@@ -34,7 +34,6 @@ def log(request):
     # 각 테스트 이름을 컨텍스트로 넣어줌
     return get_logger(request.node.name)
 
-
 @pytest.fixture(scope="session")
 def iam_users():
     """여러 권한의 IAM 유저 정보 목록"""

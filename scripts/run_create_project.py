@@ -10,8 +10,7 @@ def main():
         login_as_admin(page, log)
 
         # 프로젝트 생성
-        project_name = create_project_scenario(page, log, prefix="QA_PROJECT_")
-        log.info("[SCRIPT] 최종 생성된 프로젝트 이름 = %s", project_name)
+        create_project_scenario(page, log, prefix="QA_PROJECT_")
 
 if __name__ == "__main__":
     main()

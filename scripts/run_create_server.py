@@ -44,15 +44,14 @@ def main():
         context = browser.new_context()
         page = context.new_page()
 
-        # 1) admin 로그인
+        # admin 로그인
         login_as_admin(page)
 
-        # 2) 대상 프로젝트 진입
+        # 대상 프로젝트 진입
         open_project(page, project_name)
 
-        # 3) 서버 생성 시나리오 실행
+        # 서버 생성 시나리오 실행
         server_name = create_server_scenario(page, log)
-        log.info("[SCRIPT] 최종 생성된 서버 이름 = %s", server_name)
 
         context.close()
         browser.close()

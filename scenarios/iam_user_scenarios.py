@@ -1,18 +1,14 @@
+from pathlib import Path
 from playwright.sync_api import Page
 from pages.user_page import UserPage
 
+from utils.capture import screenshots 
 
 def create_iam_user_scenario(page: Page, iam_user_info: dict, log) -> str:
     """
     ADMIN 계정에서 IAM 사용자 1명 생성 시나리오
-
-    전제조건
-    - page: 이미 ADMIN(KT) 계정으로 로그인된 상태
-    - iam_user_info: id / name / email / phone / password 를 포함한 dict
-
-    반환값
-    - 생성한 IAM 사용자 id
     """
+
     user_id   = iam_user_info["id"]
     name      = iam_user_info["name"]
     email     = iam_user_info["email"]
@@ -36,5 +32,17 @@ def create_iam_user_scenario(page: Page, iam_user_info: dict, log) -> str:
     )
 
     log.info("[ADMIN] IAM 사용자 생성 완료 | id=%s", user_id)
+
+        # ===== 여기서 '마지막 화면' 한 장만 캡처 + zip =====
+    base_dir = Path(__file__).resolve().parent      # scenarios/ 디렉터리
+    ss_dir = base_dir.parent / "screenshots"        # 프로젝트 루트/screenshots
+    ss_dir.mkdir(exist_ok=True)
+
+    zip_file = ss_dir / f"{Path(__file__).stem}.zip"
+
+    sc = screenshots(ss_dir, zip_file)
+    # label은 서버 이름 정도만 넣어두면 나중에 구분하기 편함
+    sc.snap(page, label=f"{user_id}")
+    sc.zip_close()
 
     return user_id
