@@ -1,7 +1,9 @@
-from playwright.sync_api import Page, expect
-from utils.namer import make_alpha_name
+""" Key Pair POM """
 
-class KeypairPage:
+from playwright.sync_api import Page, expect
+from utils.namer import make_name_only_alpha
+
+class KPPage:
 
     # ===== selector / text 상수 =====
     KP_NAV_BUTTON_NAME = "Key Pair"
@@ -12,8 +14,8 @@ class KeypairPage:
     CONFIRM_BUTTON_NAME = "생성"
     CLOSE_BUTTON_NAME = "닫기"
 
-    KP_CREATE_SUCCESS_TEXT = "Key Pair 생성 성공"
-    KP_CREATE_FAIL_TEXT = "생성 실패"
+    CREATE_SUCCESS_TEXT = "Key Pair 생성 성공"
+    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
@@ -40,9 +42,8 @@ class KeypairPage:
     def submit_and_close(self, timeout: int = 10000):
         self.confirm_button.first.click()
 
-        """Key Pair 생성 토스트 검증"""
-        success_toast = self.page.get_by_text(self.KP_CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.KP_CREATE_FAIL_TEXT)
+        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)
@@ -55,10 +56,9 @@ class KeypairPage:
 
         self.close_button.click()
 
-    def create_vpc(self, name_prefix: str = "KEY-") -> str:
-        kp_name = make_alpha_name(prefix=name_prefix)
+    def create_kp(self, name_prefix: str = "KEY-") -> str:
+        kp_name = make_name_only_alpha(prefix=name_prefix)
 
-        self.open_kp_create()
         self.fill_form(name=kp_name)
         self.submit_and_close()
         return kp_name

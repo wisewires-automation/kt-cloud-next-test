@@ -1,0 +1,64 @@
+""" Security Group POM """
+
+from playwright.sync_api import Page, expect
+from utils.namer import make_name
+
+class SGPage:
+
+    # ===== selector / text 상수 =====
+    SG_NAV_BUTTON_NAME = "Security Groups"
+    SG_CREATE_BUTTON_NAME = "Security Group 생성"
+
+    SG_NAME_INPUT = 'input[name="name"]'        # Security Group 이름
+    SG_DESC_INPUT = 'input[name="description"]' # 설명
+
+    CONFIRM_BUTTON_NAME = "생성하기"
+    
+    CREATE_SUCCESS_TEXT = "생성 완료"
+    CREATE_FAIL_TEXT = "생성 실패"
+
+    def __init__(self, page: Page):
+        self.page = page
+
+        self.sg_nav_button = page.get_by_role("button", name=self.SG_NAV_BUTTON_NAME, exact=True)
+        self.sg_create_button = (page.locator("button").filter(has_text=self.SG_CREATE_BUTTON_NAME).first)
+
+        self.name_input = page.locator(self.SG_NAME_INPUT)
+        self.desc_input = page.locator(self.SG_DESC_INPUT)
+
+        self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
+
+    # ===== 공통 동작 =====
+    def open_sg_create(self, timeout: int = 10000):
+        expect(self.sg_nav_button).to_be_visible(timeout=timeout)
+        self.sg_nav_button.click()
+
+        expect(self.sg_create_button).to_be_visible(timeout=timeout)
+        self.sg_create_button.click()
+
+    def fill_form(self, name: str):
+        self.name_input.fill(name)
+
+    def submit(self, timeout: int = 10000):
+        expect(self.confirm_button).to_be_enabled(timeout=timeout)
+        self.confirm_button.click()
+
+        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        
+        try:
+            expect(success_toast).to_be_visible(timeout=timeout)
+        except Exception:
+            try:
+                expect(fail_toast).to_be_visible(timeout=timeout)
+                raise AssertionError("Security Group 생성 실패")
+            except Exception:
+                raise
+    
+    def create_sg(self, name_prefix: str = "SG-") -> str:
+        ig_name = make_name(prefix=name_prefix)
+
+        self.fill_form(name=ig_name)
+        self.submit()
+        
+        return ig_name

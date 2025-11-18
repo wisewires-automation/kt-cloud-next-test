@@ -1,3 +1,5 @@
+""" VPC POM """
+
 from playwright.sync_api import Page, expect
 from utils.namer import make_name
 
@@ -11,7 +13,7 @@ class VPCPage:
     VPC_CIDR_INPUT = 'input[name="cidr"]'           # CIDR 주소
 
     CONFIRM_BUTTON_NAME = "확인"
-    VPC_CREATE_SUCCESS_TEXT = "VPC 생성 성공"
+    CREATE_SUCCESS_TEXT = "VPC 생성 성공"
 
     def __init__(self, page: Page):
         self.page = page
@@ -45,13 +47,12 @@ class VPCPage:
         self.confirm_button.click()
 
         """VPC 생성 성공 토스트 검증"""
-        expect(self.page.get_by_text(self.VPC_CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
+        expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
-    def create_vpc(self, name_prefix: str = "TEST_VPC", cidr: str = "10.0.0.0/8", timeout: int = 20000) -> str:
-        """VPC명 랜덤 생성 (예: TEST_VPC_Z9K1)"""
-        vpc_name = make_name(prefix=name_prefix, suffix_len=4)
-
-        self.open_vpc_create()
+    def create_vpc(self, name_prefix: str = "TEST_VPC", cidr: str = "10.0.0.0/8") -> str:
+        vpc_name = make_name(prefix=name_prefix)
+        
         self.fill_form(name=vpc_name, cidr=cidr)
         self.submit()
+
         return vpc_name

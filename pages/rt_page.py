@@ -1,32 +1,32 @@
-""" Subnet POM """
+""" Route Tables POM """
 
 from playwright.sync_api import Page, expect
 from utils.namer import make_name
 
-class SubnetPage:
+class RTPage:
 
     # ===== selector / text 상수 =====
-    SUBNET_NAV_BUTTON_NAME = "Subnet"
-    SUBNET_CREATE_BUTTON_NAME = "Subnet 생성"
+    RT_NAV_BUTTON_NAME = "Route tables"
+    RT_CREATE_BUTTON_NAME = "Route Tables 생성"
 
-    VPC_SELECT_NAME = "VPC를 선택해주세요"         # VPC 선택 Placeholder
+    RT_NAME_INPUT = 'input[name="name"]'           # Route Table 명
+    RT_DESC_INPUT = 'input[name="description"]'    # Route Table 설명
 
-    SUBNET_NAME_INPUT = 'input[name="name"]'    # Subnet 이름
-    SUBNET_CIDR_INPUT = 'input[name="cidr"]'    # Subnet CIDR 블록
+    VPC_SELECT_NAME = "VPC를 선택하세요"             # VPC 선택 Placeholder
 
-    CONFIRM_BUTTON_NAME = "확인"
+    CONFIRM_BUTTON_NAME = "생성하기"
     
-    CREATE_SUCCESS_TEXT = "Subnet 생성 성공"
+    CREATE_SUCCESS_TEXT = "생성 완료"
     CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.subnet_nav_button = page.get_by_role("button", name=self.SUBNET_NAV_BUTTON_NAME, exact=True)
-        self.subnet_create_button = (page.locator("button").filter(has_text=self.SUBNET_CREATE_BUTTON_NAME).first)
+        self.rt_nav_button = page.get_by_role("button", name=self.RT_NAV_BUTTON_NAME, exact=True)
+        self.rt_create_button = (page.locator("button").filter(has_text=self.RT_CREATE_BUTTON_NAME).first)
 
-        self.name_input = page.locator(self.SUBNET_NAME_INPUT)
-        self.cidr_input = page.locator(self.SUBNET_CIDR_INPUT)
+        self.name_input = page.locator(self.RT_NAME_INPUT)
+        self.desc_input = page.locator(self.RT_DESC_INPUT)
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
@@ -34,12 +34,16 @@ class SubnetPage:
         self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
 
     # ===== 공통 동작 =====
-    def open_subnet_create(self, timeout: int = 10000):
-        expect(self.subnet_nav_button).to_be_visible(timeout=timeout)
-        self.subnet_nav_button.click()
+    def open_rt_create(self, timeout: int = 10000):
+        expect(self.rt_nav_button).to_be_visible(timeout=timeout)
+        self.rt_nav_button.click()
 
-        expect(self.subnet_create_button).to_be_visible(timeout=timeout)
-        self.subnet_create_button.click()
+        expect(self.rt_create_button).to_be_visible(timeout=timeout)
+        self.rt_create_button.click()
+
+    def fill_form(self, name: str, desc: str):
+        self.name_input.fill(name)
+        self.desc_input.fill(desc)
 
     def select_vpc_by_name(self, vpc_name: str, timeout: int = 10000):
         self.vpc_select.click()
@@ -52,36 +56,32 @@ class SubnetPage:
         self.vpc_select.click()
         self.vpc_option.nth(0).click()
 
-    def fill_form(self, name: str, cidr: str):
-        self.name_input.fill(name)
-        self.cidr_input.fill(cidr)
-
     def submit(self, timeout: int = 10000):
         expect(self.confirm_button).to_be_enabled(timeout=timeout)
         self.confirm_button.click()
 
-        """Subnet 생성 토스트 검증"""
         success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
         fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
         
         try:
-            # 1차: 성공 토스트 대기
             expect(success_toast).to_be_visible(timeout=timeout)
         except Exception:
-            # 2차: 실패 토스트 확인
             try:
                 expect(fail_toast).to_be_visible(timeout=timeout)
                 raise AssertionError("Subnet 생성 실패")
             except Exception:
                 raise
 
-    def create_subnet(self, name_prefix: str = "SUBNET-", cidr: str = "10.0.0.0/8", vpc_name: str = "") -> str:
-        subnet_name = make_name(prefix=name_prefix)
+    def create_rt(self, name_prefix: str = "RT-", desc: str = "", vpc_name: str = "") -> str:
+        rt_name = make_name(prefix=name_prefix)
 
-        # vpc 명이 있을 경우 이름으로 선택 없을 경우 pass
+        # vpc 명이 있을 경우 이름으로 선택 없을 경우 제일 첫번째 옵션 선택
         if vpc_name:
             self.select_vpc_by_name(vpc_name)
+        else:
+            self.select_first_vpc()
 
-        self.fill_form(name=subnet_name, cidr=cidr)
+        self.fill_form(name=rt_name, desc=desc)
         self.submit()
-        return subnet_name
+
+        return rt_name

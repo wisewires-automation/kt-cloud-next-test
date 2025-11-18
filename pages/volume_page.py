@@ -1,3 +1,5 @@
+""" Volume POM """
+
 from playwright.sync_api import Page, expect
 from utils.namer import make_name
 
@@ -15,8 +17,8 @@ class VolumePage:
 
     CONFIRM_BUTTON_NAME = "확인"
 
-    VOLUME_CREATE_SUCCESS_TEXT = "Volume 생성 성공"
-    VOLUME_CREATE_FAIL_TEXT = "생성 실패"
+    CREATE_SUCCESS_TEXT = "Volume 생성 성공"
+    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
@@ -49,8 +51,8 @@ class VolumePage:
         self.confirm_button.first.click()
 
         """Volume 생성 토스트 검증"""
-        success_toast = self.page.get_by_text(self.VOLUME_CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.VOLUME_CREATE_FAIL_TEXT)
+        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)

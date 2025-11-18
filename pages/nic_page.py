@@ -1,3 +1,5 @@
+""" Network Interface POM """
+
 from playwright.sync_api import Page, expect
 from utils.namer import make_name
 
@@ -14,7 +16,7 @@ class NICPage:
     SUBNET_SELECT_NAME = "Subnet을 선택해주세요."   # Subnet 선택 Placeholder
 
     CONFIRM_BUTTON_NAME = "생성하기"
-    NIC_CREATE_SUCCESS_TEXT = "생성 완료"
+    CREATE_SUCCESS_TEXT = "생성 완료"
 
     def __init__(self, page: Page):
         self.page = page
@@ -61,15 +63,15 @@ class NICPage:
         # viewport에서 보이지 않아 강제 클릭
         self.confirm_button.evaluate("el => el.click()")
 
-        expect(self.page.get_by_text(self.NIC_CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
+        expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
-    def create_nic(self, name_prefix: str = "NIC-", timeout: int = 20000) -> str:
-        nic_name = make_name(prefix=name_prefix, suffix_len=4)
+    def create_nic(self, name_prefix: str = "NIC-", select_network: bool = False) -> str:
+        nic_name = make_name(prefix=name_prefix)
 
-        # self.open_nic_create()
         self.name_input.fill(nic_name)
-        self.select_vpc_option_by_index()
-        self.select_subnet_option_by_index()
+        if select_network:
+            self.select_vpc_option_by_index()
+            self.select_subnet_option_by_index()
         self.submit()
 
         return nic_name

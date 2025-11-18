@@ -1,9 +1,10 @@
-import pytest, os, time
+import pytest, os, time, json
 from playwright.sync_api import sync_playwright
 from utils.logger import setup_logging, get_logger
 from dotenv import load_dotenv
 
 from pages.auth_page import AuthPage
+from pages.user_page import UserPage
 from pages.project_page import ProjectPage
 
 load_dotenv()
@@ -27,15 +28,27 @@ def page(browser):
     yield page
     context.close()
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def log(request):
     # 각 테스트 이름을 컨텍스트로 넣어줌
     return get_logger(request.node.name)
 
 
+@pytest.fixture(scope="session")
+def iam_users():
+    """여러 권한의 IAM 유저 정보 목록"""
+    with open("config/iam_project_role.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+    
 @pytest.fixture
-def logged_in_page(page, log):
-    """로그인된 상태의 fixture"""
+def iam_user_info(iam_users):
+    return iam_users["TEMP"]
+
+@pytest.fixture
+def kt_logged_in_page(page, log):
+    """
+    KT cloud (admin 계정)으로 로그인된 상태 fixture
+    """
     url   = os.getenv("LOGIN_URL")
     kt_id = os.getenv("KT_USER_ID")
     kt_pw = os.getenv("KT_USER_PW")
@@ -45,23 +58,46 @@ def logged_in_page(page, log):
 
     auth = AuthPage(page)
 
-    log.info("[KT] 로그인 시작")
+    log.info("[ADMIN] 로그인 시작")
     auth.login_kt(url=url, user_id=kt_id, password=kt_pw)
-    log.info("[KT] 로그인 완료")
+    log.info("[ADMIN] 로그인 완료")
 
     time.sleep(2)
+    return page
+
+@pytest.fixture
+def iam_logged_in_page(page, iam_user_info, log):
+    """
+    IAM 계정으로 로그인된 상태의 fixture
+    """
+    login_url = os.getenv("LOGIN_URL")
+    group_id  = os.getenv("GROUP_ID")
+
+    auth_page = AuthPage(page)
+
+    log.info("[IAM] 로그인 시작 | id=%s", iam_user_info["id"])
+    auth_page.login_iam(
+        url=login_url,
+        group_id=group_id,
+        user_id=iam_user_info["id"],
+        password=iam_user_info["password"],
+    )
+    log.info("[IAM] 로그인 완료 | id=%s", iam_user_info["id"])
 
     return page
 
 @pytest.fixture
-def project_name():
-    return os.getenv("PROJECT_NAME", "TEST_CREATE_SERVER")
+def project_opened_page(kt_logged_in_page, log):
+    """
+    로그인 + 프로젝트 진입 fixture
+    """
+    page = kt_logged_in_page
+    # page = iam_logged_in_page
+    # print('iam_user_info :', iam_user_info)
 
-@pytest.fixture
-def project_opened_page(logged_in_page, project_name, log):
-    """로그인 + 프로젝트 진입 fixture"""
-    page = logged_in_page
     project_page = ProjectPage(page)
+
+    project_name = "TEST_CREATE_SERVER"
 
     log.info("프로젝트 진입 | 프로젝트 이름=%s", project_name)
     project_page.open_project(project_name)

@@ -1,3 +1,5 @@
+""" Project POM """
+
 from playwright.sync_api import Page, expect
 from utils.namer import make_name
 
@@ -53,7 +55,7 @@ class ProjectPage:
 
     def create_project(self, prefix: str = "TEST_PROJECT_", description: str = "test project 자동 생성", timeout: int = 20000) -> str:
         """프로젝트명 랜덤 생성 (예: TEST_PROJECT_AB12) 후 생성"""
-        project_name = make_name(prefix=prefix, suffix_len=4)
+        project_name = make_name(prefix=prefix)
 
         self.open_create_popup(timeout=timeout)
         self.fill_form(name=project_name, description=description, timeout=timeout)
