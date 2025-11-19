@@ -1,14 +1,13 @@
-# KT Cloud 자동화 테스트
+# KT Cloud 콘솔 자동화 테스트
 
-Playwright + Pytest + Page Object Model(POM) 구조로 자동화한 테스트 프로젝트입니다.
+Playwright + Page Object Model(POM) 구조로 작성한 프로젝트입니다.
 
 ---
 
 ## 1. 기술 스택
 
-- Python 3.11 (권장)
+- Python 3.11
 - [Playwright for Python](https://playwright.dev/python/)
-- Pytest
 
 
 ## 2. 개발 환경 / 사전 준비
@@ -40,65 +39,80 @@ playwright install
 # 로그인 URL
 LOGIN_URL=https://console.ktcloud.com/...
 
-# KT Cloud 계정
+# 계정 정보
 KT_USER_ID=your_kt_id
 KT_USER_PW=your_kt_password
-
-# IAM 계정
 GROUP_ID=your_group_id
-IAM_USER_ID=your_iam_id
-IAM_USER_PW=your_iam_password
 
 # VPC / Subnet / Server 관련 값
 VPC_CIDR=10.0.0.0/8
 PROJECT_NAME=TEST_CREATE_SERVER
+
+# 스크린샷 저장 경로
+SCREENSHOT_PATH = C:\
 ```
 
 ## 4. 프로젝트 구조
 ```
 KT-CLOUD-CONSOLE/
-├─ pages/                      # Playwright Page Object 모음
-│  ├─ auth_page.py             # 로그인 / 로그아웃 POM
-│  └─ ...                      # 기타 페이지들
+├─ config/
+│  └─ iam_project_role.json     # IAM 계정 role 설정
 │
-├─ tests/                      # Pytest 테스트 스위트
-│  ├─ test_auth.py             # 로그인 테스트
-│  └─ ...                      # 기타 테스트 케이스들
+├─ pages/                       # Playwright Page Object 모음
+│  ├─ locators/                 # 공통 Locator
+│  │  ├─ actions.py   
+│  │  └─ common.py    
+│  │
+│  ├─ auth_page.py              # 로그인 / 로그아웃 POM
+│  └─ ...                       # 기타 페이지들
+│
+├─ tests/                       #  테스트 스크립트 모음
+│  ├─ test_auth.py              # 로그인 관련 시나리오
+│  └─ ...                       # 기타 테스트 케이스들
 │
 ├─ utils/
-│  ├─ namer.py            # 랜덤 이름 생성 유틸
-│  ├─ logger.py           # 공통 로깅 설정 유틸 (logs/test.log 에 기록)
+│  ├─ capture.py                 # 스크린샷 유틸
+│  ├─ iam_user_config.py         # config/iam_project_role.json 로더
+│  ├─ logger.py                  # 공통 로깅 설정 (logs/test.log 등)
+│  ├─ namer.py                   # 랜덤 이름 생성 유틸
+│  └─ playwright_helpers.py      # Playwright 세션/로그인 헬퍼
 │
-├─ logs/                  # logger용 로그 파일 디렉터리
+├─ logs/                         # 로깅 출력 디렉터리
 │
-├─ .env                   # 환경변수 설정
-├─ .env.example           # 예시 환경변수 템플릿 (선택)
+├─ .env                          # 환경변수 설정 파일
+├─ .env.example                  # .env 템플릿 (선택)
 ├─ requirements.txt
-├─ pytest.ini             # pytest 설정 (선택)
+├─ .gitignore
 └─ README.md
 ```
 
 ## 5. 테스트 실행 방법
+각 테스트 모듈을 ``python -m`` 방식으로 실행합니다.
 
-### 5.1. 전체 테스트 실행
+모든 테스트 코드는 ``tests/`` 디렉터리 아래에 위치합니다
+
+### 5.1. 공통 Playwright 헬퍼
+``create_page(headless: bool = False)``
+
+→ ``with create_page() as page:`` 형태로 Playwright page 객체 생성
 ```
-pytest
+# tests/test_auth.py (예시)
+
+from utils.playwright_helpers import create_page, login_as_admin
+
+def main():
+    with create_page(headless=False) as page:
+        login_as_admin(page)
+        # 이후 필요한 검증 및 추가 시나리오 수행
+
+if __name__ == "__main__":
+    main()
 ```
 
-### 5.2. 특정 파일만 실행
-```
-pytest tests/test_auth.py
-```
+## 6. 기타
+- 스크린샷
+    - 오류 발생 시 ``utils/capture.py``에서 스크린샷을 남길 수 있습니다.
 
-### 5.3. 특정 테스트 함수만 실행
-
-```
-# IAM 로그인만 실행
-pytest tests/test_auth.py::test_iam_login
-```
-
-### 5.4. 키워드로 실행
-```
-# 이름에 "vpc"가 포함된 테스트만 실행
-pytest -k "vpc"
-```
+- 로깅
+    - ``utils/logger.py``의 ``setup_logging()`` / ``get_logger()``를 통해
+모듈별 로거를 생성해 ``logs/`` 디렉터리에 로그를 남깁니다.
