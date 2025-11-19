@@ -1,24 +1,27 @@
 from utils.logger import setup_logging, get_logger
 from utils.playwright_helpers import create_page, login_as_admin
-from scenarios.iam_user_scenarios import create_iam_user_scenario
 from utils.iam_user_config import get_iam_user
+from utils.capture import ScreenshotSession
+from scenarios.iam_user_scenarios import create_iam_user_scenario
+
+log = get_logger("run_create_iam_user")
 
 def main():
-    setup_logging()
-    log = get_logger("run_create_iam_user")
 
     iam_user_info = get_iam_user("TEMP")
-    log.info(
-        "[SCRIPT] 생성 예정 IAM 계정 | role=TEMP, id=%s, name=%s",
-        iam_user_info["id"],
-        iam_user_info["name"],
-    )
 
-    with create_page(headless=False) as page:
-        login_as_admin(page, log)
+    log.info("생성 예정 IAM 계정 | role=TEMP, id=%s",iam_user_info["id"],)
 
-        created_id = create_iam_user_scenario(page, iam_user_info, log)
-        log.info("[SCRIPT] IAM 사용자 생성 완료 | id=%s", created_id)
+    with create_page(headless=False) as page, \
+        ScreenshotSession(__file__, zip_name="run_create_iam_user") as sc:
+
+        try:
+            login_as_admin(page, log)
+            create_iam_user_scenario(page, log, iam_user_info, sc=sc)
+        except Exception:
+            sc.snap(page, "error")
+            log.exception("[ERROR] IAM 계정 생성 중 예외 발생")
+            raise
 
 if __name__ == "__main__":
     main()

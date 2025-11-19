@@ -1,15 +1,17 @@
-import os
-import time
+import os, time
 from dotenv import load_dotenv
+
 from playwright.sync_api import sync_playwright
 from utils.logger import setup_logging, get_logger
+
 from pages.auth_page import AuthPage
+from pages.project_page import ProjectPage
 
 load_dotenv()
 setup_logging()
 
 def login_as_admin(page, log=None):
-    """KT admin 계정으로 로그인 (conftest.kt_logged_in_page와 동일 역할)"""
+    """KT admin 계정으로 로그인"""
     url   = os.getenv("LOGIN_URL")
     kt_id = os.getenv("KT_USER_ID")
     kt_pw = os.getenv("KT_USER_PW")
@@ -28,14 +30,16 @@ def login_as_admin(page, log=None):
     time.sleep(2)
     return page
 
+def open_project(page, project_name: str, log=None):
+    project_page = ProjectPage(page)
+
+    log.info("프로젝트 진입 | 프로젝트 이름=%s", project_name)
+    project_page.open_project(project_name)
+
+    return page
+
 
 def create_page(headless: bool = False):
-    """
-    pytest 없이 쓸 때:
-    with create_page() as page:
-        ...
-    형태로 사용 가능한 헬퍼
-    """
     from contextlib import contextmanager
 
     @contextmanager

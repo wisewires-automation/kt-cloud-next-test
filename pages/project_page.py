@@ -57,7 +57,7 @@ class ProjectPage:
     def create_project(self, prefix: str = "TEST_PROJECT_", description: str = "test project 자동 생성", timeout: int = 20000) -> str:
         """프로젝트명 랜덤 생성 (예: TEST_PROJECT_AB12) 후 생성"""
         # project_name = make_name(prefix=prefix)
-        project_name = "QA_TEST_PROJECT"
+        project_name = "QA_P_05"
 
         self.open_create_popup(timeout=timeout)
         time.sleep(3)

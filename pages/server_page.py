@@ -158,7 +158,6 @@ class ServerPage:
         expect(self.confirm_button).to_be_visible(timeout=timeout)
         self.confirm_button.click()
 
-        """서버 생성 토스트 검증"""
         success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
         fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
         
