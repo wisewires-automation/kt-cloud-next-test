@@ -1,39 +1,30 @@
 """ Subnet POM """
 
 from playwright.sync_api import Page, expect
+from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
 class SubnetPage:
 
-    # ===== selector / text 상수 =====
-    SUBNET_NAV_BUTTON_NAME = "Subnet"
-    SUBNET_CREATE_BUTTON_NAME = "Subnet 생성"
-
     VPC_SELECT_NAME = "VPC를 선택해주세요"         # VPC 선택 Placeholder
-
-    SUBNET_NAME_INPUT = 'input[name="name"]'    # Subnet 이름
-    SUBNET_CIDR_INPUT = 'input[name="cidr"]'    # Subnet CIDR 블록
-
-    CONFIRM_BUTTON_NAME = "확인"
-    
+    NAME_INPUT = 'input[name="name"]'    # Subnet 이름
+    CIDR_INPUT = 'input[name="cidr"]'    # Subnet CIDR 블록
     CREATE_SUCCESS_TEXT = "Subnet 생성 성공"
-    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.subnet_nav_button = page.get_by_role("button", name=self.SUBNET_NAV_BUTTON_NAME, exact=True)
-        self.subnet_create_button = (page.locator("button").filter(has_text=self.SUBNET_CREATE_BUTTON_NAME).first)
-
-        self.name_input = page.locator(self.SUBNET_NAME_INPUT)
-        self.cidr_input = page.locator(self.SUBNET_CIDR_INPUT)
+        self.subnet_nav_button = page.get_by_role("button", name=S.SUBNET_MENU, exact=True)
+        self.subnet_create_button = (page.locator("button").filter(has_text=C.SUBNET_CREATE).first)
+        self.name_input = page.locator(self.NAME_INPUT)
+        self.cidr_input = page.locator(self.CIDR_INPUT)
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
 
-        self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
+        self.confirm_button = page.get_by_role("button", name=B.CONFIRM_BUTTON)
 
-    # ===== 공통 동작 =====
     def open_subnet_create(self, timeout: int = 10000):
         expect(self.subnet_nav_button).to_be_visible(timeout=timeout)
         self.subnet_nav_button.click()
@@ -62,7 +53,7 @@ class SubnetPage:
 
         """Subnet 생성 토스트 검증"""
         success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
         
         try:
             # 1차: 성공 토스트 대기

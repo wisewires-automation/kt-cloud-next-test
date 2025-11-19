@@ -1,32 +1,24 @@
 """ Key Pair POM """
 
 from playwright.sync_api import Page, expect
+from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name_only_alpha
 
 class KPPage:
-
-    # ===== selector / text 상수 =====
-    KP_NAV_BUTTON_NAME = "Key Pair"
-    KP_CREATE_BUTTON_NAME = "Key Pair 생성"
-
-    KP_NAME_INPUT = 'input[name="name"]' # Key Pair 이름
-
-    CONFIRM_BUTTON_NAME = "생성"
-    CLOSE_BUTTON_NAME = "닫기"
-
+    NAME_INPUT = 'input[name="name"]'    # Key Pair 이름
     CREATE_SUCCESS_TEXT = "Key Pair 생성 성공"
-    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.kp_nav_button = page.get_by_role("button", name=self.KP_NAV_BUTTON_NAME, exact=True)
-        self.kp_create_button = (page.locator("button").filter(has_text=self.KP_CREATE_BUTTON_NAME).first)
+        self.kp_nav_button = page.get_by_role("button", name=S.KP_MENU, exact=True)
+        self.kp_create_button = (page.locator("button").filter(has_text=C.KP_CREATE).first)
 
-        self.name_input = page.locator(self.KP_NAME_INPUT)
+        self.name_input = page.locator(self.NAME_INPUT)
 
-        self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME, exact=True)
-        self.close_button = page.get_by_role("button", name=self.CLOSE_BUTTON_NAME, exact=True)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_CONFIRM_BUTTON, exact=True)
+        self.close_button = page.get_by_role("button", name=B.CLOSE_BUTTON, exact=True)
 
     # ===== 공통 동작 =====
     def open_kp_create(self, timeout: int = 10000):
@@ -43,7 +35,7 @@ class KPPage:
         self.confirm_button.first.click()
 
         success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)

@@ -1,34 +1,24 @@
 """ Network ACL POM """
 
 from playwright.sync_api import Page, expect
+from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
 class ACLPage:
 
-    # ===== selector / text 상수 =====
-    ACL_NAV_BUTTON_NAME = "Network ACL"
-    ACL_CREATE_BUTTON_NAME = "네트워크 ACL 생성"
-
-    AGL_NAME_INPUT = 'input[name="name"]'        # 네트워크 ACL 이름
-    ACL_DESC_INPUT = 'input[name="description"]' # 설명
-
-    CONFIRM_BUTTON_NAME = "생성하기"
-    
-    CREATE_SUCCESS_TEXT = "생성 완료"
-    CREATE_FAIL_TEXT = "생성 실패"
+    NAME_INPUT = 'input[name="name"]'        # 네트워크 ACL 이름
+    DESC_INPUT = 'input[name="description"]' # 설명
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.acl_nav_button = page.get_by_role("button", name=self.ACL_NAV_BUTTON_NAME, exact=True)
-        self.acl_create_button = (page.locator("button").filter(has_text=self.ACL_CREATE_BUTTON_NAME).first)
+        self.acl_nav_button = page.get_by_role("button", name=S.NACL_MENU, exact=True)
+        self.acl_create_button = (page.locator("button").filter(has_text=C.NACL_CREATE).first)
+        self.name_input = page.locator(self.NAME_INPUT)
+        self.desc_input = page.locator(self.DESC_INPUT)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
 
-        self.name_input = page.locator(self.AGL_NAME_INPUT)
-        self.desc_input = page.locator(self.ACL_DESC_INPUT)
-
-        self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
-
-    # ===== 공통 동작 =====
     def open_acl_create(self, timeout: int = 10000):
         expect(self.acl_nav_button).to_be_visible(timeout=timeout)
         self.acl_nav_button.click()
@@ -43,8 +33,8 @@ class ACLPage:
         expect(self.confirm_button).to_be_enabled(timeout=timeout)
         self.confirm_button.click()
 
-        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        success_toast = self.page.get_by_text(T.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)
@@ -55,7 +45,7 @@ class ACLPage:
             except Exception:
                 raise
     
-    def create_acl(self, name_prefix: str = "ACL-") -> str:
+    def create_acl(self, name_prefix: str = "QA-ACL-") -> str:
         ig_name = make_name(prefix=name_prefix)
 
         self.fill_form(name=ig_name)

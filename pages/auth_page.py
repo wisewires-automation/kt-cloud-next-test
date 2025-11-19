@@ -1,10 +1,8 @@
 """ 로그인, 로그아웃 POM """
-
 from playwright.sync_api import Page, expect
 
 class AuthPage:
 
-    # ===== selector / text 상수 =====
     ORG_CODE_INPUT = 'input[name="orgCode"]'    # 조직 아이디
     USERNAME_INPUT = 'input[name="username"]'   # 아이디
     PASSWORD_INPUT = 'input[name="password"]'   # 비밀번호

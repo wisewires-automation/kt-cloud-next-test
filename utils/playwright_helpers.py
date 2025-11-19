@@ -11,7 +11,9 @@ load_dotenv()
 setup_logging()
 
 def login_as_admin(page, log=None):
-    """KT admin 계정으로 로그인"""
+    log = get_logger("login_as_admin")
+
+    """admin 계정으로 로그인"""
     url   = os.getenv("LOGIN_URL")
     kt_id = os.getenv("KT_USER_ID")
     kt_pw = os.getenv("KT_USER_PW")
@@ -30,14 +32,29 @@ def login_as_admin(page, log=None):
     time.sleep(2)
     return page
 
-def open_project(page, project_name: str, log=None):
+def login_as_iam(page, log=None, user_id: str = ""):
+    """IAM 계정으로 로그인"""
+    log = get_logger("login_as_iam")
+
+    auth = AuthPage(page)
+
+    if log:
+        log.info("[IAM] 로그인 시작 | 아이디=%s", user_id)
+    if log:
+        log.info("[IAM] 로그인 완료")
+
+    return page
+
+def open_project(page, log=None, project_name: str = "QA_TEST_PROJECT"):
+    """proejct 진입"""
+    log = get_logger("open_project")
+
     project_page = ProjectPage(page)
 
     log.info("프로젝트 진입 | 프로젝트 이름=%s", project_name)
     project_page.open_project(project_name)
 
     return page
-
 
 def create_page(headless: bool = False):
     from contextlib import contextmanager

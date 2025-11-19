@@ -1,39 +1,28 @@
 """ Route Tables POM """
 
 from playwright.sync_api import Page, expect
+from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
 class RTPage:
 
-    # ===== selector / text 상수 =====
-    RT_NAV_BUTTON_NAME = "Route tables"
-    RT_CREATE_BUTTON_NAME = "Route Tables 생성"
-
     RT_NAME_INPUT = 'input[name="name"]'           # Route Table 명
     RT_DESC_INPUT = 'input[name="description"]'    # Route Table 설명
-
     VPC_SELECT_NAME = "VPC를 선택하세요"             # VPC 선택 Placeholder
-
-    CONFIRM_BUTTON_NAME = "생성하기"
-    
-    CREATE_SUCCESS_TEXT = "생성 완료"
-    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
 
-        self.rt_nav_button = page.get_by_role("button", name=self.RT_NAV_BUTTON_NAME, exact=True)
-        self.rt_create_button = (page.locator("button").filter(has_text=self.RT_CREATE_BUTTON_NAME).first)
-
+        self.rt_nav_button = page.get_by_role("button", name=S.RT_MENU, exact=True)
+        self.rt_create_button = (page.locator("button").filter(has_text=C.RT_CREATE).first)
         self.name_input = page.locator(self.RT_NAME_INPUT)
         self.desc_input = page.locator(self.RT_DESC_INPUT)
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
 
-        self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
-
-    # ===== 공통 동작 =====
     def open_rt_create(self, timeout: int = 10000):
         expect(self.rt_nav_button).to_be_visible(timeout=timeout)
         self.rt_nav_button.click()
@@ -60,8 +49,8 @@ class RTPage:
         expect(self.confirm_button).to_be_enabled(timeout=timeout)
         self.confirm_button.click()
 
-        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        success_toast = self.page.get_by_text(T.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)

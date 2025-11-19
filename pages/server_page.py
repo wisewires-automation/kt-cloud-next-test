@@ -1,6 +1,8 @@
 """ Server POM """
 
 from playwright.sync_api import Page, expect
+from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
 from pages.vpc_page import VPCPage
@@ -13,27 +15,14 @@ SERVER_SPEC_TAB = ["AMD (1세대)", "INTEL (1세대)", "DEV"]
 
 class ServerPage:
 
-    SERVER_NAV_BUTTON_NAME = "Server"
-    SERVER_CREATE_BUTTON_NAME = "Server 생성"
-
     AZ_SELECT_NAME = "az 선택"            # Availability Zone 선택 placeholder
     AZ_DEFAULT_NAME = "DX-G-GB-A"
-    SERVER_NAME_INPUT_PLACEHOLDER = '서버 이름을 입력하세요.'  # Server 이름
-
+    SERVER_NAME_INPUT_PLACEHOLDER = "서버 이름을 입력하세요."  # Server 이름
     VPC_SELECT_NAME = "vpc 선택"            # VPC 선택 placeholder
     SUBNET_SELECT_NAME = "subnet 선택"      # Subnet 선택 placeholder
     KP_SELECT_NAME = "옵션을 선택하세요"      # Key Pair 선택 placeholder
-
-    VOLUME_CREATE_BUTTON_TEXT = "Volume 생성"
-    VPC_CREATE_BUTTON_TEXT = "VPC 생성"
-    SUBNET_CREATE_BUTTON_TEXT = "Subnet 생성"
     NIC_CREATE_BUTTON_TEXT = "신규 NIC 생성"
-    KP_CREATE_BUTTON_TEXT = "Key Pair 생성"
-
     CONFIRM_BUTTON_NAME = "서버 생성"
-
-    CREATE_SUCCESS_TEXT = "생성 완료"
-    CREATE_FAIL_TEXT = "생성 실패"
 
     def __init__(self, page: Page):
         self.page = page
@@ -42,8 +31,8 @@ class ServerPage:
         self.nic_page = NICPage(page)
         self.kp_page = KPPage(page)
 
-        self.server_nav_button = page.get_by_role("button", name=self.SERVER_NAV_BUTTON_NAME, exact=True)
-        self.server_create_button = (page.locator("button").filter(has_text=self.SERVER_CREATE_BUTTON_NAME).first)
+        self.server_nav_button = page.get_by_role("button", name=S.SERVER_MENU, exact=True)
+        self.server_create_button = (page.locator("button").filter(has_text=C.SERVER_CREATE).first)
 
         self.radio_group = page.locator("div[role='radiogroup']")
 
@@ -57,10 +46,10 @@ class ServerPage:
         self.kp_select = self.page.get_by_role("combobox").filter(has_text=self.KP_SELECT_NAME)
         self.options = self.page.locator(".s-select-options-container .s-select-item--option")
 
-        self.create_vpc_button = page.locator("button").filter(has_text=self.VPC_CREATE_BUTTON_TEXT)
-        self.create_subnet_button = page.locator("button").filter(has_text=self.SUBNET_CREATE_BUTTON_TEXT)
+        self.create_vpc_button = page.locator("button").filter(has_text=C.VPC_CREATE)
+        self.create_subnet_button = page.locator("button").filter(has_text=C.SUBNET_CREATE)
         self.create_nic_button = page.locator("button").filter(has_text=self.NIC_CREATE_BUTTON_TEXT)
-        self.create_kp_button = page.locator("button").filter(has_text=self.KP_CREATE_BUTTON_TEXT)
+        self.create_kp_button = page.locator("button").filter(has_text=C.KP_CREATE)
 
         self.confirm_button = page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
 
@@ -158,8 +147,8 @@ class ServerPage:
         expect(self.confirm_button).to_be_visible(timeout=timeout)
         self.confirm_button.click()
 
-        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
+        success_toast = self.page.get_by_text(T.CREATE_SUCCESS_TEXT)
+        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
         
         try:
             expect(success_toast).to_be_visible(timeout=timeout)

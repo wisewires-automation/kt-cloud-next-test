@@ -4,12 +4,9 @@ from playwright.sync_api import Page, expect
 
 class RolePage:
 
-    # ===== selector / text 상수 =====
     ROLE_EDIT_BUTTON_NAME = "역할 수정"
-
     ORG_ROLE_TEXT = "조직 역할"
     PROJECT_ROLE_TEXT = "프로젝트 역할"
-
     ASSIGN_BUTTON_NAME = "역할 할당"
 
     def __init__(self, page: Page):

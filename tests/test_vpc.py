@@ -1,16 +1,22 @@
 import os
 from dotenv import load_dotenv
+from playwright.sync_api import Page
+from pathlib import Path
+from utils.playwright_helpers import create_page, login_as_admin
+from utils.logger import get_logger
+from utils.capture import ScreenshotSession
 
 from pages.vpc_page import VPCPage
 
 load_dotenv()
 
-def test_create_vpc(project_opened_page, log):
+file_name = Path(__file__).stem
+log = get_logger(file_name)
+
+def create_vpc_scenario(page: Page, log, sc: ScreenshotSession | None = None) -> str:
     """
     VPC 생성 테스트
     """
-    page = project_opened_page
-
     vpc_page = VPCPage(page)
     
     cidr = os.getenv("CIDR")
@@ -23,14 +29,19 @@ def test_create_vpc(project_opened_page, log):
 
     log.info("VPC 생성 완료 | VPC 이름=%s", vpc_name)
 
-def test_delete_vpc(project_opened_page, log):
-    """
-    VPC 삭제 테스트
-    """
-    page = project_opened_page
+    return vpc_name
 
-    # TODO: VPC 이름 클릭 -> 삭제 버튼 클릭 -> 삭제 가능 여부 판단 -> 삭제 or 삭제 불가능 결과
+def main():
+    with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
 
-    vpc_name = ""
+        try:
+            login_as_admin(page, log)
+            vpc_name = create_vpc_scenario(page, log, sc)
+            sc.snap(page, label=vpc_name)
+        except Exception:
+            sc.snap(page, "error")
+            log.exception("[ERROR] VPC 생성 중 예외 발생")
+            raise
 
-    log.info("VPC 삭제 완료 | VPC 이름=%s", vpc_name)
+if __name__ == "__main__":
+    main()

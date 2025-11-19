@@ -1,24 +1,28 @@
 """ 사용자 POM """
 
-from playwright.sync_api import Page, expect
 import time
+import json
+from pathlib import Path
+from playwright.sync_api import Page, expect
+
+BASE_DIR = Path(__file__).resolve().parent
+LOCATORS = json.loads((BASE_DIR / "locators.json").read_text(encoding="utf-8"))
 
 class UserPage:
 
-    # ===== selector / text 상수 =====
-    ADMIN_BUTTON_NAME = "ADMIN"
-    USER_CREATE_BUTTON_NAME = "사용자 생성"
+    ADMIN_BUTTON_NAME = LOCATORS["ADMIN_BUTTON_NAME"]
+    USER_CREATE_BUTTON_NAME = LOCATORS["USER_CREATE_BUTTON_NAME"]
 
-    ID_INPUT_PLACEHOLDER = '사용자 아이디를 입력해주세요.'            # 사용자 아이디
-    NAME_INPUT_PLACEHOLDER = '사용자 이름을 입력해주세요.'            # 사용자 이름
-    EMAIL_INPUT_PLACEHOLDER = '이메일을 입력해주세요.'               # 이메일
-    PHONE_INPUT_PLACEHOLDER = "'-'를 제외하고 숫자만 입력해주세요."   # 휴대폰 번호
-    PW_INPUT_PLACEHOLDER = '비밀번호를 입력해주세요.'                # 비밀번호
-    PW_CONFIRM_INPUT_PLACEHOLDER = '비밀번호를 확인해주세요.'        # 비밀번호 확인
+    ID_INPUT_PLACEHOLDER = LOCATORS["ID_INPUT_PLACEHOLDER"]                # 사용자 아이디
+    NAME_INPUT_PLACEHOLDER = LOCATORS["NAME_INPUT_PLACEHOLDER"]               # 사용자 이름
+    EMAIL_INPUT_PLACEHOLDER = LOCATORS["EMAIL_INPUT_PLACEHOLDER"]              # 이메일
+    PHONE_INPUT_PLACEHOLDER = LOCATORS["PHONE_INPUT_PLACEHOLDER"]              # 휴대폰 번호
+    PW_INPUT_PLACEHOLDER = LOCATORS["PW_INPUT_PLACEHOLDER"]                # 비밀번호
+    PW_CONFIRM_INPUT_PLACEHOLDER = LOCATORS["PW_CONFIRM_INPUT_PLACEHOLDER"]        # 비밀번호 확인
 
-    CONFIRM_BUTTON_NAME = "확인"
-    CREATE_SUCCESS_TEXT = "생성 완료"
-    CREATE_FAIL_TEXT = "생성 실패"
+    CONFIRM_BUTTON_NAME = LOCATORS["CONFIRM_BUTTON_NAME"]
+    CREATE_SUCCESS_TEXT = LOCATORS["CREATE_SUCCESS_TEXT"]
+    CREATE_FAIL_TEXT = LOCATORS["CREATE_FAIL_TEXT"]
 
     def __init__(self, page: Page):
         self.page = page
