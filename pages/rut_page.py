@@ -14,14 +14,14 @@ class RTPage:
     def __init__(self, page: Page):
         self.page = page
 
-        self.rt_nav_button = page.get_by_role("button", name=S.RT_MENU, exact=True)
+        self.rt_nav_button = page.get_by_role("button", name=S.RUT_MENU, exact=True)
         self.rt_create_button = (page.locator("button").filter(has_text=C.RT_CREATE).first)
         self.name_input = page.locator(self.RT_NAME_INPUT)
         self.desc_input = page.locator(self.RT_DESC_INPUT)
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
     def open_rt_create(self, timeout: int = 10000):
         expect(self.rt_nav_button).to_be_visible(timeout=timeout)

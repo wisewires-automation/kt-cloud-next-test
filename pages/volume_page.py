@@ -26,7 +26,7 @@ class VolumePage:
         self.volumne_select = (self.page.get_by_role("combobox").filter(has_text=self.VOLUME_SELECT_NAME).first)
         self.volumne_options = self.page.locator(".s-select-options-container .s-select-item--option")
 
-        self.confirm_button = page.get_by_role("button", name=B.CONFIRM_BUTTON, exact=True)
+        self.confirm_button = page.get_by_role("button", name=B.CONFIRM_TEXT, exact=True)
 
     def open_volume_create(self, timeout: int = 10000):
         expect(self.volume_nav_button).to_be_visible(timeout=timeout)

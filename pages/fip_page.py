@@ -1,7 +1,6 @@
 """ Floating IP POM """
 
 from playwright.sync_api import Page, expect
-from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
 
@@ -14,7 +13,7 @@ class FIPPage:
 
         self.fip_nav_button = page.get_by_role("button", name=S.FIP_MENU, exact=True)
         self.fip_create_button = (page.locator("button").filter(has_text=C.FIP_CREATE).first)
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_CONFIRM_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_TEXT)
 
     def open_fip_create(self, timeout: int = 10000):
         expect(self.fip_nav_button).to_be_visible(timeout=timeout)

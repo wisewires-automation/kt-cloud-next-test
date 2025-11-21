@@ -8,7 +8,7 @@ from utils.namer import make_name
 from pages.vpc_page import VPCPage
 from pages.subnet_page import SubnetPage
 from pages.nic_page import NICPage
-from pages.kp_page import KPPage
+from pages.keypair_page import KPPage
 
 SERVER_IMAGE_TAB = ["OS 이미지", "서버 이미지", "서버 스냅샷"]
 SERVER_SPEC_TAB = ["AMD (1세대)", "INTEL (1세대)", "DEV"]

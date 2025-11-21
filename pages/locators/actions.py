@@ -1,10 +1,13 @@
 class SidebarLocators:
+    ADMIN_MENU = "ADMIN"
+
+    # 콘솔
     SERVER_MENU = "Server"
     NIC_MENU = "NIC (Network Interface)"
     KP_MENU = "Key Pair"
     VPC_MENU = "VPC"
     SUBNET_MENU = "Subnet"
-    RT_MENU = "Route tables"
+    RUT_MENU = "Route tables"
     NAT_MENU = "NAT Gateway"
     VPC_P_MENU = "VPC Peering"
     FIP_MENU = "Floating IP"
@@ -13,6 +16,13 @@ class SidebarLocators:
     SG_MENU = "Security Groups"
     LOAD_BALANCER = "Load Balancer"
     VOLUME_MENU = "Volume"
+
+    # 관리자 페이지
+    MANAGE_PROJECT_MENU = "프로젝트 관리"
+    USER_MENU = "사용자"
+    USER_GROUP_MENU = "사용자 그룹"
+    ROLE_MENU = "역할"
+    MANAGE_ORG_MENU = "조직 정보 관리"
 
 class CreateButtonLocators:
     SERVER_CREATE = "Server 생성"
@@ -29,3 +39,6 @@ class CreateButtonLocators:
     SG_CREATE = "Security Group 생성"
     LOAD_BALANCER_CREATE = "Load Balancer 생성"
     VOLUME_CREATE = "Volume 생성"
+    PROJECT_CREATE = "프로젝트 생성"
+    USER_CREATE = "사용자 생성"
+    USER_GROUP_CREATE = "사용자 그룹 생성"

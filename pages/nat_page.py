@@ -22,7 +22,7 @@ class RTPage:
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
 
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
     # ===== 공통 동작 =====
     def open_rt_create(self, timeout: int = 10000):

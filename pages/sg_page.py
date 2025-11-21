@@ -19,7 +19,7 @@ class SGPage:
         self.name_input = page.locator(self.SG_NAME_INPUT)
         self.desc_input = page.locator(self.SG_DESC_INPUT)
 
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
     def open_sg_create(self, timeout: int = 10000):
         expect(self.sg_nav_button).to_be_visible(timeout=timeout)

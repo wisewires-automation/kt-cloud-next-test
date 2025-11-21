@@ -17,7 +17,7 @@ class ACLPage:
         self.acl_create_button = (page.locator("button").filter(has_text=C.NACL_CREATE).first)
         self.name_input = page.locator(self.NAME_INPUT)
         self.desc_input = page.locator(self.DESC_INPUT)
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
     def open_acl_create(self, timeout: int = 10000):
         expect(self.acl_nav_button).to_be_visible(timeout=timeout)

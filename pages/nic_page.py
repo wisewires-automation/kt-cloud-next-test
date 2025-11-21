@@ -29,7 +29,7 @@ class NICPage:
         self.security_row = page.get_by_role("row").filter(has_text="default").first
         self.security_checkbox = self.security_row.locator('input[type="checkbox"]').first
 
-        self.confirm_button = page.get_by_role("button",name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button",name=B.CREATE_BUTTON_NAME)
 
     # ===== 공통 동작 =====
     def open_nic_create(self, timeout: int = 10000):

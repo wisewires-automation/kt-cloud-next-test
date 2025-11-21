@@ -4,7 +4,7 @@ from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.capture import ScreenshotSession
 
-from pages.rt_page import RTPage
+from pages.rut_page import RTPage
 
 file_name = Path(__file__).stem
 log = get_logger(file_name)

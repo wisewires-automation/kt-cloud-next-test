@@ -15,7 +15,7 @@ class IGPage:
         self.ig_nav_button = page.get_by_role("button", name=S.IG_MENU, exact=True)
         self.ig_create_button = (page.locator("button").filter(has_text=C.IG_CREATE).first)
         self.name_input = page.locator(self.NAME_INPUT)
-        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON)
+        self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
     def open_ig_create(self, timeout: int = 10000):
         expect(self.ig_nav_button).to_be_visible(timeout=timeout)
