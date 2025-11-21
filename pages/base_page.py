@@ -197,3 +197,17 @@ class BasePage:
 
         # timeout 동안 성공/실패 텍스트 둘 다 못 찾음
         raise AssertionError("성공/실패 토스트를 찾지 못했습니다.")
+
+
+        # success_toast = self.page.get_by_text(T.CREATE_SUCCESS_TEXT)
+        # fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
+        
+        # try:
+        #     expect(success_toast).to_be_visible(timeout=timeout)
+        # except Exception:
+        #     try:
+        #         expect(fail_toast).to_be_visible(timeout=timeout)
+        #         raise AssertionError("Nework ACL 생성 실패")
+        #     except Exception:
+        #         raise
+    

@@ -29,6 +29,7 @@ class VPCPage(BasePage):
     def cidr_input(self):
         """모달 - CIDR 주소 입력 필드"""
         return self.page.locator(self.CIDR_INPUT)
+    
     # ============================================================
     # ACTIONS
     # ============================================================

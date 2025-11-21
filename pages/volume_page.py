@@ -1,12 +1,15 @@
 """ Volume POM """
 
 from playwright.sync_api import Page, expect
+from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
-class VolumePage:
-
+class VolumePage(BasePage):
+    # ============================================================
+    # TEXT / SELECTOR (텍스트 & 셀렉터 상수)
+    # ============================================================
     NAME_INPUT = 'input[name="name"]'        # Volume 이름
     DESC_INPUT = 'input[name="description"]' # Volume 설명
     SIZE_INPUT = 'input[name="size"]'        # Volume 용량
@@ -14,6 +17,7 @@ class VolumePage:
     CREATE_SUCCESS_TEXT = "Volume 생성 성공"
 
     def __init__(self, page: Page):
+        super().__init__(page)
         self.page = page
 
         self.volume_nav_button = page.get_by_role("button", name=S.VOLUME_MENU, exact=True)

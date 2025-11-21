@@ -47,7 +47,7 @@ def update_subnet_scenario(page: Page, log, subnet_name: str, new_name: str, sc:
     
     log.info("[TC-00] Subnet 수정 시작 | Subnet 이름=%s", subnet_name)
     subnet_page.go_link_by_name(name=subnet_name)
-    subnet_name = subnet_page.run_rename_flow(new_name=new_name)
+    subnet_page.run_rename_flow(new_name=new_name)
     log.info("[TC-00] Subnet 수정 완료 | 변경된 Subnet 이름=%s", new_name)
 
     if sc is not None:
