@@ -30,7 +30,7 @@ class CreateButtonLocators:
     KP_CREATE = "Key Pair 생성"
     VPC_CREATE = "VPC 생성"
     SUBNET_CREATE = "Subnet 생성"
-    RT_CREATE = "Route Tables 생성"
+    RUT_CREATE = "Route Tables 생성"
     NAT_CREATE = "NAT Gateway 생성"
     VPC_PEERING_CREATE = "VPC Peering 생성"
     FIP_CREATE = "Floating IP 생성"

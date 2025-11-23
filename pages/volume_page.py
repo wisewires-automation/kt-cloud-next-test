@@ -20,59 +20,49 @@ class VolumePage(BasePage):
         super().__init__(page)
         self.page = page
 
-        self.volume_nav_button = page.get_by_role("button", name=S.VOLUME_MENU, exact=True)
-        self.volume_create_button = (page.locator("button").filter(has_text=C.VOLUME_CREATE).first)
-
-        self.name_input = page.locator(self.NAME_INPUT)
-        self.desc_input = page.locator(self.DESC_INPUT)
-        self.size_input = page.locator(self.SIZE_INPUT)
-
         self.volumne_select = (self.page.get_by_role("combobox").filter(has_text=self.VOLUME_SELECT_NAME).first)
         self.volumne_options = self.page.locator(".s-select-options-container .s-select-item--option")
 
-        self.confirm_button = page.get_by_role("button", name=B.CONFIRM_TEXT, exact=True)
+    # ============================================================
+    # PROPERTIES (locator 객체를 반환)
+    # ============================================================
+    @property
+    def name_input(self):
+        """모달 - VPC 이름 입력 필드"""
+        return self.page.locator(self.NAME_INPUT)
 
-    def open_volume_create(self, timeout: int = 10000):
-        expect(self.volume_nav_button).to_be_visible(timeout=timeout)
-        self.volume_nav_button.click()
-
-        expect(self.volume_create_button).to_be_visible(timeout=timeout)
-        self.volume_create_button.click()
+    @property
+    def desc_input(self):
+        """모달 - 설명 입력 필드"""
+        return self.page.locator(self.DESC_INPUT)
     
+    @property
+    def size_input(self):
+        """모달 - 사이즈 입력 필드"""
+        return self.page.locator(self.SIZE_INPUT)
+    
+    # ============================================================
+    # ACTIONS
+    # ============================================================
+    def fill_form(self, name: str, desc: str, size: str):
+        """VPC 이름, CIDR 입력"""
+        self.name_input.fill(name)
+        self.desc_input.fill(desc)
+
     def select_option_by_index(self, idx: int = 0):
         self.volumne_select.click()
         self.volumne_options.nth(idx).click()
 
-    def submit(self, timeout: int = 10000):
-        self.confirm_button.first.click()
+    # ===== 테스트 시나리오 단위 ACTIONS =====
+    def create_volume(self, desc: str = "test volume 입니다", size: str = "128") -> str:
+        volume_name = make_name(prefix="QA-VOLUME-")
 
-        """Volume 생성 토스트 검증"""
-        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(T.CREATE_FAIL_TEXT)
-        
-        try:
-            expect(success_toast).to_be_visible(timeout=timeout)
-        except Exception:
-            try:
-                expect(fail_toast).to_be_visible(timeout=timeout)
-                raise AssertionError("Volumn 생성 실패")
-            except Exception:
-                raise
-
-    def create_volume(
-            self, 
-            name_prefix: str = "QA-VOLUME-", 
-            desc: str = "test volume 입니다",
-            size: str = "128") -> str:
-        
-        volume_name = make_name(prefix=name_prefix)
-
-        self.open_volume_create()
-        self.name_input.fill(volume_name)
-        self.desc_input.fill(desc)
+        self.fill_form(name=volume_name, desc=desc)
         self.select_option_by_index() # Volume 유형
+
         self.size_input.fill(size)
         self.select_option_by_index() # 가용 영역 유형
+        
         self.submit()
 
         return volume_name

@@ -1,26 +1,23 @@
 """ Network Interface POM """
 
 from playwright.sync_api import Page, expect
+from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
-class NICPage:
-
-    NAME_INPUT = 'input[name="name"]'         # Network Interface 이름
-    IP_INPUT = 'input[name="ipAddress"]'      # 사설 IP
-
+class NICPage(BasePage):
+    # ============================================================
+    # TEXT / SELECTOR (텍스트 & 셀렉터 상수)
+    # ============================================================
+    NAME_INPUT = 'input[name="name"]'           # Network Interface 이름
+    IP_INPUT = 'input[name="ipAddress"]'        # 사설 IP
     VPC_SELECT_NAME = "VPC를 선택해주세요."         # VPC 선택 Placeholder
     SUBNET_SELECT_NAME = "Subnet을 선택해주세요."   # Subnet 선택 Placeholder
 
     def __init__(self, page: Page):
+        super().__init__(page)
         self.page = page
-
-        self.vpc_nav_button = page.get_by_role("button", name=S.NIC_MENU, exact=True)
-        self.vpc_create_button = (page.locator("button").filter(has_text=C.NIC_CREATE).first)
-
-        self.name_input = page.locator(self.NAME_INPUT)
-        self.ip_input = page.locator(self.IP_INPUT)
 
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.subnet_select = (self.page.get_by_role("combobox").filter(has_text=self.SUBNET_SELECT_NAME).first)
@@ -31,13 +28,26 @@ class NICPage:
 
         self.confirm_button = page.get_by_role("button",name=B.CREATE_BUTTON_NAME)
 
-    # ===== 공통 동작 =====
-    def open_nic_create(self, timeout: int = 10000):
-        expect(self.vpc_nav_button).to_be_visible(timeout=timeout)
-        self.vpc_nav_button.click()
+    # ============================================================
+    # PROPERTIES (locator 객체를 반환)
+    # ============================================================ 
+    @property
+    def name_input(self):
+        """모달 - NIC 이름 입력 필드"""
+        return self.page.locator(self.NAME_INPUT)
 
-        expect(self.vpc_create_button).to_be_visible(timeout=timeout)
-        self.vpc_create_button.click()
+    @property
+    def ip_input(self):
+        """모달 - IP 입력 필드"""
+        return self.page.locator(self.IP_INPUT)
+    
+    # ============================================================
+    # ACTIONS
+    # ============================================================
+    def fill_form(self, name: str, ip: str):
+        """NIC 생성 폼 작성"""
+        self.name_input.fill(name)
+        self.ip_input.fill(ip)
 
     def select_vpc_option_by_index(self, idx: int = 0):
         self.vpc_select.click()
@@ -51,7 +61,7 @@ class NICPage:
         expect(self.security_checkbox).to_be_visible(timeout=timeout)
         self.security_checkbox.click()
 
-    def submit(self, timeout: int = 20000):
+    def submit_nic(self, timeout: int = 20000):
         # DOM에는 붙어 있는지 확인
         expect(self.confirm_button).to_be_attached(timeout=timeout)
 
@@ -60,13 +70,14 @@ class NICPage:
 
         expect(self.page.get_by_text(T.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
-    def create_nic(self, name_prefix: str = "QA-NIC-", select_network: bool = False) -> str:
-        nic_name = make_name(prefix=name_prefix)
+    def create_nic(self, select_network: bool = False) -> str:
+        nic_name = make_name(prefix="QA-NIC-")
+        self.fill_form(name=nic_name)
 
-        self.name_input.fill(nic_name)
         if select_network:
             self.select_vpc_option_by_index()
             self.select_subnet_option_by_index()
-        self.submit()
+
+        self.submit_nic()
 
         return nic_name

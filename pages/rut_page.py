@@ -1,35 +1,44 @@
 """ Route Tables POM """
 
 from playwright.sync_api import Page, expect
+from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from utils.namer import make_name
 
-class RTPage:
-
-    RT_NAME_INPUT = 'input[name="name"]'           # Route Table 명
-    RT_DESC_INPUT = 'input[name="description"]'    # Route Table 설명
+class RUTPage(BasePage):
+    # ============================================================
+    # TEXT / SELECTOR (텍스트 & 셀렉터 상수)
+    # ============================================================
+    NAME_INPUT = 'input[name="name"]'           # Route Table 명
+    DESC_INPUT = 'input[name="description"]'    # Route Table 설명
     VPC_SELECT_NAME = "VPC를 선택하세요"             # VPC 선택 Placeholder
 
     def __init__(self, page: Page):
+        super().__init__(page)
         self.page = page
 
-        self.rt_nav_button = page.get_by_role("button", name=S.RUT_MENU, exact=True)
-        self.rt_create_button = (page.locator("button").filter(has_text=C.RT_CREATE).first)
-        self.name_input = page.locator(self.RT_NAME_INPUT)
-        self.desc_input = page.locator(self.RT_DESC_INPUT)
         self.vpc_select = (self.page.get_by_role("combobox").filter(has_text=self.VPC_SELECT_NAME).first)
         self.vpc_label = self.page.locator("label.s-select-radio-label")
         self.vpc_option = self.page.locator(".s-select-options-container .s-select-item--option")
         self.confirm_button = page.get_by_role("button", name=B.CREATE_BUTTON_NAME)
 
-    def open_rt_create(self, timeout: int = 10000):
-        expect(self.rt_nav_button).to_be_visible(timeout=timeout)
-        self.rt_nav_button.click()
+    # ============================================================
+    # PROPERTIES (locator 객체를 반환)
+    # ============================================================ 
+    @property
+    def name_input(self):
+        """모달 - VPC 이름 입력 필드"""
+        return self.page.locator(self.NAME_INPUT)
 
-        expect(self.rt_create_button).to_be_visible(timeout=timeout)
-        self.rt_create_button.click()
-
+    @property
+    def desc_input(self):
+        """모달 - 설명 입력 필드"""
+        return self.page.locator(self.DESC_INPUT)
+    
+    # ============================================================
+    # ACTIONS
+    # ============================================================
     def fill_form(self, name: str, desc: str):
         self.name_input.fill(name)
         self.desc_input.fill(desc)
@@ -61,8 +70,9 @@ class RTPage:
             except Exception:
                 raise
 
-    def create_rt(self, name_prefix: str = "RT-", desc: str = "", vpc_name: str = "") -> str:
-        rt_name = make_name(prefix=name_prefix)
+    # ===== 테스트 시나리오 단위 ACTIONS =====
+    def create_rut(self, desc: str = "", vpc_name: str = "") -> str:
+        rt_name = make_name(prefix="QA-RUT-")
 
         # vpc 명이 있을 경우 이름으로 선택 없을 경우 제일 첫번째 옵션 선택
         if vpc_name:

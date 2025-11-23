@@ -1,9 +1,8 @@
 """ Network ACL POM """
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.locators.common import ButtonLocators as B
 from utils.namer import make_name
 
 class ACLPage(BasePage):
