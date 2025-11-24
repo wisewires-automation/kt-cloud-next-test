@@ -45,6 +45,6 @@ class ACLPage(BasePage):
         acl_name = make_name(prefix="QA-ACL-")
 
         self.fill_form(name=acl_name)
-        self.submit(text=B.CREATE_BUTTON_NAME)
+        self.click_button(text=B.CREATE_BUTTON_NAME)
         
         return acl_name

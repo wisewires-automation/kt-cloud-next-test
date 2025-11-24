@@ -52,6 +52,7 @@ class UserGroupPage(BasePage):
     # ACTIONS
     # ============================================================
     def go_user_group_menu(self, timeout: int = 10000):
+        """사용자 그룹 메뉴로 이동"""
         expect(self.user_group_menu).to_be_visible(timeout=timeout)
         self.user_group_menu.click()
 
@@ -67,6 +68,7 @@ class UserGroupPage(BasePage):
         btn.evaluate("el => el.click()")
     
     def click_user_row(self, name: str, timeout: int = 10000):
+        """사용자 row 클릭"""
         user_row = self.row.filter(has=self.page.locator(self.name_cell, has_text=name))
         expect(user_row).to_be_visible(timeout=timeout)
         user_row.click()
@@ -75,7 +77,7 @@ class UserGroupPage(BasePage):
     def create_user_group(self, name: str, desc: str):
         """사용자 생성 플로우"""
         self.fill_form(name, desc)
-        self.submit()
+        self.click_button()
 
 
 

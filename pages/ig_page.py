@@ -35,5 +35,5 @@ class IGPage(BasePage):
         """Internet Gateway 생성 플로우"""
         ig_name = make_name(prefix="QA-IG-")
         self.fill_form(name=ig_name)
-        self.submit(text=B.CREATE_BUTTON_NAME)
+        self.click_button(text=B.CREATE_BUTTON_NAME)
         return ig_name

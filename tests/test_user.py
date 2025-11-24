@@ -7,7 +7,6 @@ from utils.capture import ScreenshotSession
 from utils.users import user_repo
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.user_page import UserPage
-from pages.role_page import RolePage
 
 file_name = Path(__file__).stem
 log = get_logger(file_name)
@@ -27,11 +26,11 @@ def create_user_scenario(page: Page, log, user, sc: ScreenshotSession) -> str:
     log.info("[ADMIN] 관리자 페이지 이동")
     user_page.go_manage_admin()
 
-    log.info("[TC-00] IAM 사용자 생성 시작")
+    log.info("[TC-00] 사용자 생성 시작")
     log.info("        - id=%s, name=%s, email=%s, phone=%s", user_id, name, email, phone)
     user_page.open_create_modal(C.USER_CREATE)
     user_page.create_user(id=user_id, name=name, email=email, phone=phone, password=password)
-    log.info("[TC-00] IAM 사용자 생성 완료 | id=%s", user_id)
+    log.info("[TC-00] 사용자 생성 완료 | id=%s", user_id)
 
     # 사용자 생성된 화면 캡쳐를 위해 추가
     time.sleep(2)
@@ -42,25 +41,71 @@ def create_user_scenario(page: Page, log, user, sc: ScreenshotSession) -> str:
     return user_id
 
 # -------------------------
+# 사용자 수정 시나리오
+# -------------------------
+def update_user_info_scenario(page: Page, log, sc: ScreenshotSession) -> str:
+    user_page = UserPage(page)
+
+    user_id   = "testid01"
+    name      = "이름수정"
+    email     = "edited@google.com"
+    phone     = "01011223344"
+
+    log.info("[ADMIN] 관리자 페이지 이동")
+    user_page.go_manage_admin()
+
+    log.info("[TC-00] 사용자 수정 시작 | id=%s", user_id)
+    user_page.click_user_row(id=user_id)
+    user_page.update_user_info(name=name, email=email, phone=phone)
+    log.info("[TC-00] 사용자 수정 완료")
+
+    # 사용자 수정된 화면 캡쳐를 위해 추가
+    time.sleep(1)
+
+    if sc is not None:
+        sc.snap(page, label=user_id)
+
+# -------------------------
+# 사용자 비밀번호 변경 시나리오
+# -------------------------
+def update_user_password_scenario(page: Page, log, sc: ScreenshotSession) -> str:
+    user_page = UserPage(page)
+
+    user_id   = "testid01"
+    password  = "wW231202##"
+
+    user_page.go_manage_admin()
+
+    log.info("[TC-00] 사용자 비밀번호 변경 시작 | id=%s", user_id)
+    user_page.click_user_row(id=user_id)
+    user_page.update_user_password(password)
+    log.info("[TC-00] 사용자 비밀번호 변경 완료")
+
+    # 사용자 수정된 화면 캡쳐를 위해 추가
+    time.sleep(1)
+
+    if sc is not None:
+        sc.snap(page, label=user_id)
+
+# -------------------------
 # 사용자 권한 부여 시나리오
 # -------------------------
 def grant_role_scenario(page: Page, log, user, sc: ScreenshotSession):
 
     user_page = UserPage(page)
-    role_page = RolePage(page)
 
     log.info("[ADMIN] 관리자 페이지 이동")
     user_page.go_manage_admin()
 
     log.info("[ADMIN] IAM 사용자 클릭 | id=%s", user.id)
-    role_page.click_user_row(id=user.id)
-    role_page.click_role_edit()
+    user_page.click_user_row(id=user.id)
+    user_page.click_role_edit()
 
     # log.info("[ADMIN] 라디오 그룹 선택")
-    # role_page.click_radio_group(is_org=False)
+    # user_page.click_radio_group(is_org=False)
 
     log.info("[ADMIN] 역할 선택")
-    role_page.click_role_checkbox_by_name("USER_MANAGER")
+    user_page.click_role_checkbox_by_name("USER_MANAGER")
 
     time.sleep(5)
 
@@ -72,7 +117,6 @@ def grant_role_scenario(page: Page, log, user, sc: ScreenshotSession):
 # -------------------------
 def delete_user_scenario(page: Page, log, user, sc: ScreenshotSession):
     user_page = UserPage(page)
-    role_page = RolePage(page)
 
     log.info("[ADMIN] 관리자 페이지 이동")
     user_page.go_manage_admin()
@@ -80,7 +124,7 @@ def delete_user_scenario(page: Page, log, user, sc: ScreenshotSession):
     id = "testid05"
 
     log.info("[TC-00] 사용자 삭제 시작")
-    role_page.click_user_row(id=id)
+    user_page.click_user_row(id=id)
     user_page.click_delete_user()
     user_page.run_delete_flow()
     log.info("[TC-00] 사용자 삭제 완료 | 사용자 ID=%s", id)
@@ -101,6 +145,12 @@ def main():
 
             # 사용자 생성
             # create_user_scenario(page, log, user, sc)
+
+            # 사용자 수정
+            # update_user_info_scenario(page, log, sc)
+
+            # 사용자 비밀변호 변경
+            update_user_password_scenario(page, log, sc)
 
             # 사용자 권한 부여
             # grant_role_scenario(page, log, user, sc)

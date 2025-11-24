@@ -152,7 +152,7 @@ class VolumePage(BasePage):
         self.size_input.fill(size)
         self.select_option_by_index() # 가용 영역 유형
         
-        self.submit()
+        self.click_button()
 
         return volume_name
     
@@ -161,7 +161,7 @@ class VolumePage(BasePage):
         self.open_row_menu(volume_name)
         self.click_in_menu(menu_name="volume 용량 확장")
         self.new_size_input.fill(size)
-        self.submit()
+        self.click_button()
     
     def create_volume_image(self, volume_name:str, desc: str) -> str:
         """Volume 이미지 생성 플로우"""
@@ -170,7 +170,7 @@ class VolumePage(BasePage):
 
         volume_image_name = make_name(prefix="QA-VIMG-")
         self.fill_image_form(name=volume_image_name, desc=desc)
-        self.submit()
+        self.click_button()
 
         return volume_image_name
     
@@ -181,7 +181,7 @@ class VolumePage(BasePage):
 
         volume_snap_name = make_name(prefix="QA-VSNAP-")
         self.fill_snap_form(name=volume_snap_name, desc=desc)
-        self.submit()
+        self.click_button()
 
         return volume_snap_name
     

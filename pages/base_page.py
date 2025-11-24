@@ -74,17 +74,17 @@ class BasePage:
         expect(create_btn).to_be_visible(timeout=timeout)
         create_btn.click()
 
-    def submit(self, text: str = B.CONFIRM_TEXT, timeout: int = 20000):
-        """모달 - 확인 버튼 클릭"""
-        confirm_btn = self.page.get_by_role("button", name=text).first
+    def click_button(self, text: str = B.CONFIRM_TEXT, timeout: int = 20000):
+        """버튼 locator 클릭"""
+        btn = self.page.get_by_role("button", name=text).first
         try:
-            expect(confirm_btn).to_be_visible(timeout=timeout)
-            expect(confirm_btn).to_be_enabled(timeout=timeout)
-            confirm_btn.click()
+            expect(btn).to_be_visible(timeout=timeout)
+            expect(btn).to_be_enabled(timeout=timeout)
+            btn.click()
         except Exception:
             # viewport 밖이거나 visibility 체크에서 실패한 경우 강제 클릭
-            expect(confirm_btn).to_be_attached(timeout=timeout)
-            confirm_btn.evaluate("el => el.click()")
+            expect(btn).to_be_attached(timeout=timeout)
+            btn.evaluate("el => el.click()")
 
     def open_project(self, project_name: str = "QA-PROJECT-001", timeout: int = 10000):
         """프로젝트 리스트에서 특정 프로젝트 클릭하여 진입"""

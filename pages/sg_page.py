@@ -42,5 +42,5 @@ class SGPage(BasePage):
         """Security Group 생성 플로우"""
         sg_name = make_name(prefix="QA-SG-")
         self.fill_form(name=sg_name)
-        self.submit(text=B.CREATE_BUTTON_NAME)
+        self.click_button(text=B.CREATE_BUTTON_NAME)
         return sg_name

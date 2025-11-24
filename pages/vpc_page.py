@@ -42,7 +42,7 @@ class VPCPage(BasePage):
         """VPC 생성 플로우"""
         vpc_name = make_name(prefix="QA-VPC-")
         self.fill_form(name=vpc_name, cidr=cidr)
-        self.submit()
+        self.click_button()
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
         return vpc_name

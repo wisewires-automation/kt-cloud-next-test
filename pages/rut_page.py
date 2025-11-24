@@ -81,6 +81,6 @@ class RUTPage(BasePage):
             self.select_first_vpc()
 
         self.fill_form(name=rt_name, desc=desc)
-        self.submit(text=B.CREATE_BUTTON_NAME)
+        self.click_button(text=B.CREATE_BUTTON_NAME)
 
         return rt_name

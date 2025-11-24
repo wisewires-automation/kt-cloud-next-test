@@ -80,7 +80,7 @@ class SubnetPage(BasePage):
             self.select_first_vpc()
 
         self.fill_form(name=subnet_name, cidr=cidr)
-        self.submit()
+        self.click_button()
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
         return subnet_name
