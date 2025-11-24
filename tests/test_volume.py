@@ -10,7 +10,7 @@ file_name = Path(__file__).stem
 log = get_logger(file_name)
 
 # -------------------------
-# Volumn 생성 시나리오
+# Volume 생성 시나리오
 # -------------------------
 def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     volume_page = VolumePage(page)
@@ -20,8 +20,8 @@ def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 
     log.info("[TC-00] Volumn 생성 시작")
     volume_page.open_create_modal(C.VOLUME_CREATE)
-    volume_name = volume_page.create_volume()
-    log.info("[TC-00] Volumn 생성 완료 | Volumn 이름=%s", volume_name)
+    volume_name = volume_page.create_volume(desc="test volume 설명입니다", size="128")
+    log.info("[TC-00] Volumn 생성 완료 | Volume 이름=%s", volume_name)
 
     if sc is not None:
         sc.snap(page, label=volume_name)
@@ -29,24 +29,7 @@ def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     return volume_name
 
 # -------------------------
-# Volumn 수정 시나리오
-# -------------------------
-def update_volume_scenario(page: Page, log, volume_name: str, new_name: str, sc: ScreenshotSession):
-    volume_page = VolumePage(page)
-
-    # volume_page.open_project()
-    # volume_page.go_console_menu(S.VOLUME_MENU)
-    
-    log.info("[TC-00] Volumn 수정 시작 | Volumn 이름=%s", volume_name)
-    volume_page.go_link_by_name(name=volume_name)
-    volume_page.run_rename_flow(new_name=new_name)
-    log.info("[TC-00] Volumn 수정 완료 | 변경된 Volumn 이름=%s", new_name)
-
-    if sc is not None:
-        sc.snap(page, label=volume_name)
-
-# -------------------------
-# Volumn 삭제 시나리오
+# Volume 삭제 시나리오
 # -------------------------
 def delete_volume_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession):
     volume_page = VolumePage(page)
@@ -54,10 +37,10 @@ def delete_volume_scenario(page: Page, log, volume_name: str, sc: ScreenshotSess
     # volume_page.open_project()
     # volume_page.go_console_menu(S.VOLUME_MENU)
     
-    log.info("[TC-00] Volumn 삭제 시작 | Volumn 이름=%s", volume_name)
-    # subnet_page.go_link_by_name(name=volume_name)
+    log.info("[TC-00] Volume 삭제 시작 | Volume 이름=%s", volume_name)
+    volume_page.delete_volume(volume_name)
     volume_page.run_delete_flow()
-    log.info("[TC-00] Volumn 삭제 완료")
+    log.info("[TC-00] Volume 삭제 완료")
 
     if sc is not None:
         sc.snap(page, label=volume_name)
@@ -70,9 +53,6 @@ def main():
 
             # Volumn 생성
             volume_name = create_volume_scenario(page, log, sc)
-
-            # Volumn 수정
-            update_volume_scenario(page, log, volume_name, new_name=f"{volume_name}-01", sc=sc)
 
             # Volumn 삭제
             delete_volume_scenario(page, log, volume_name, sc)
