@@ -117,7 +117,7 @@ class ServerPage(BasePage):# ===================================================
         return self.page.get_by_role("button", name=self.CONFIRM_BUTTON_NAME)
 
     # ============================================================
-    # ACTIONS - 공통 동작
+    # ACTIONS
     # ============================================================
     def go_server_page(self, timeout: int = 10000):
         """서버 생성 페이지로 이동"""

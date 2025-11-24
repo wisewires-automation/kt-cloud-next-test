@@ -18,7 +18,7 @@ class NATPage(BasePage):
         self.page = page
 
     # ============================================================
-    # PROPERTIES (locator 객체를 반환)
+    # PROPERTIES
     # ============================================================ 
     @property
     def name_input(self):

@@ -39,7 +39,7 @@ class VPCPage(BasePage):
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_vpc(self, cidr: str = "10.0.0.0/8", timeout: int = 10000) -> str:
-        """ VPC 생성 플로우"""
+        """VPC 생성 플로우"""
         vpc_name = make_name(prefix="QA-VPC-")
         self.fill_form(name=vpc_name, cidr=cidr)
         self.submit()

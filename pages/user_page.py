@@ -1,88 +1,101 @@
-""" 사용자 POM """
+""" User POM """
 
-import time
-import json
-from pathlib import Path
 from playwright.sync_api import Page, expect
+from pages.base_page import BasePage
 
-BASE_DIR = Path(__file__).resolve().parent
-LOCATORS = json.loads((BASE_DIR / "locators.json").read_text(encoding="utf-8"))
-
-class UserPage:
-
-    ADMIN_BUTTON_NAME = "ADMIN"
-    USER_CREATE_BUTTON_NAME = "사용자 생성"
-
-    ID_INPUT_PLACEHOLDER = '사용자 아이디를 입력해주세요.'            # 사용자 아이디
-    NAME_INPUT_PLACEHOLDER = '사용자 이름을 입력해주세요.'            # 사용자 이름
-    EMAIL_INPUT_PLACEHOLDER = '이메일을 입력해주세요.'               # 이메일
-    PHONE_INPUT_PLACEHOLDER = "'-'를 제외하고 숫자만 입력해주세요."   # 휴대폰 번호
-    PW_INPUT_PLACEHOLDER = '비밀번호를 입력해주세요.'                # 비밀번호
-    PW_CONFIRM_INPUT_PLACEHOLDER = '비밀번호를 확인해주세요.'        # 비밀번호 확인
+class UserPage(BasePage):
+    # ============================================================
+    # TEXT / SELECTOR (텍스트 & 셀렉터 상수)
+    # ============================================================
+    ID_INPUT_PLACEHOLDER = '사용자 아이디를 입력해주세요.'            # 사용자 아이디 입력 필드 placeholder
+    NAME_INPUT_PLACEHOLDER = '사용자 이름을 입력해주세요.'            # 사용자 이름 입력 필드placeholder
+    EMAIL_INPUT_PLACEHOLDER = '이메일을 입력해주세요.'               # 이메일 입력 필드placeholder
+    PHONE_INPUT_PLACEHOLDER = "'-'를 제외하고 숫자만 입력해주세요."   # 휴대폰 번호 입력 필드placeholder
+    PW_INPUT_PLACEHOLDER = '비밀번호를 입력해주세요.'                # 비밀번호 입력 필드placeholder
+    PW_CONFIRM_INPUT_PLACEHOLDER = '비밀번호를 확인해주세요.'        # 비밀번호 확인 입력 필드placeholder
 
     CONFIRM_BUTTON_NAME = "확인"
     CREATE_SUCCESS_TEXT = "생성 완료"
     CREATE_FAIL_TEXT = "생성 실패"
 
+    DELETE_USER_TEXT = "사용자 삭제"
+
     def __init__(self, page: Page):
+        super().__init__(page)
         self.page = page
 
-        self.admin_button = page.get_by_role("button", name=self.ADMIN_BUTTON_NAME, exact=True)
-        self.create_user_button = (page.locator("button").filter(has_text=self.USER_CREATE_BUTTON_NAME).first)
+    # ============================================================
+    # PROPERTIES
+    # ============================================================
+    @property
+    def id_input(self):
+        """사용자 아이디 입력 필드"""
+        return self.page.get_by_placeholder(self.ID_INPUT_PLACEHOLDER)
 
-        self.id_input = page.get_by_placeholder(self.ID_INPUT_PLACEHOLDER)
-        self.name_input = page.get_by_placeholder(self.NAME_INPUT_PLACEHOLDER)
-        self.email_input = page.get_by_placeholder(self.EMAIL_INPUT_PLACEHOLDER)
-        self.phone_input = page.get_by_placeholder(self.PHONE_INPUT_PLACEHOLDER)
-        self.pw_input = page.get_by_placeholder(self.PW_INPUT_PLACEHOLDER)
-        self.pw_confirm_input = page.get_by_placeholder(self.PW_CONFIRM_INPUT_PLACEHOLDER)
-        
-        self.switch_label = page.locator('label.s-switch__root__label[data-testid="s-switch-label"]')
+    @property
+    def name_input(self):
+        """사용자 이름 입력 필드"""
+        return self.page.get_by_placeholder(self.NAME_INPUT_PLACEHOLDER)
+    
+    @property
+    def email_input(self):
+        """사용자 이메일 입력 필드"""
+        return self.page.get_by_placeholder(self.EMAIL_INPUT_PLACEHOLDER)
+    
+    @property
+    def phone_input(self):
+        """사용자 휴대폰 번호 입력필드"""
+        return self.page.get_by_placeholder(self.PHONE_INPUT_PLACEHOLDER)
+    
+    @property
+    def pw_input(self):
+        """사용자 비밀번호 입력 필드"""
+        return self.page.get_by_placeholder(self.PW_INPUT_PLACEHOLDER)
+    
+    @property
+    def pw_confirm_input(self):
+        """사용자 비밀번호 확인 입력 필드"""
+        return self.page.get_by_placeholder(self.PW_CONFIRM_INPUT_PLACEHOLDER)
+    
+    @property
+    def switch_label(self):
+        """비밀번호 자동생성 토글"""
+        return self.page.locator('label.s-switch__root__label[data-testid="s-switch-label"]')
+    
+    @property
+    def delete_user_button(self):
+        """사용자 삭제 버튼"""
+        return self.page.get_by_role("button", name=self.DELETE_USER_TEXT, exact=True)
 
-        self.confirm_button = page.get_by_role("button",name=self.CONFIRM_BUTTON_NAME)
-
-    # ===== 공통 동작 =====
-    def go_manage_admin(self, timeout: int = 10000):
-        expect(self.admin_button).to_be_visible(timeout=timeout)
-        self.admin_button.click()
-
-    def click_create_user_button(self, timeout: int = 10000):
-        expect(self.create_user_button).to_be_visible(timeout=timeout)
-        self.create_user_button.click()
-
+    # ============================================================
+    # ACTIONS
+    # ============================================================
     def fill_form(self, id: str, name: str, email: str, phone: str):
+        """사용자 아이디, 비밀번호, 이메일, 비밀번호"""
         self.id_input.fill(id)
         self.name_input.fill(name)
         self.email_input.fill(email)
         self.phone_input.fill(phone)
 
-    def fill_pw_input(self, password: str):
+    def fill_pw_form(self, password: str):
         # 비밀번호 자동 생성 스위치 off
         self.switch_label.first.click()
 
         self.pw_input.fill(password)
         self.pw_confirm_input.fill(password)
-
-    def submit(self, timeout: int = 20000):
-        expect(self.confirm_button).to_be_visible(timeout=timeout)
-        self.confirm_button.click()
-
-        success_toast = self.page.get_by_text(self.CREATE_SUCCESS_TEXT)
-        fail_toast = self.page.get_by_text(self.CREATE_FAIL_TEXT)
-        
-        try:
-            expect(success_toast).to_be_visible(timeout=timeout)
-        except Exception:
-            try:
-                expect(fail_toast).to_be_visible(timeout=timeout)
-                raise AssertionError("사용자 생성 실패")
-            except Exception:
-                raise
     
+    def click_delete_user(self, timeout: int = 10000):
+        """사용자 삭제 버튼 클릭"""
+        btn = self.delete_user_button.click()
+        expect(btn).to_be_visible(timeout=timeout)
+        btn.click()
+    
+    # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_user(self, id: str, name: str, email: str, phone: str, password: str) -> str:
-        self.click_create_user_button()
         self.fill_form(id, name, email, phone)
-        self.fill_pw_input(password)
+        self.fill_pw_form(password)
         self.submit()
+
+
 
     

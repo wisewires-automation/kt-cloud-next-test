@@ -10,7 +10,7 @@ class SubnetPage(BasePage):
     # ============================================================
     # TEXT / SELECTOR (텍스트 & 셀렉터 상수)
     # ============================================================
-    VPC_SELECT_NAME = "VPC를 선택해주세요"   # VPC 선택 combobox placeholder 텍스트
+    VPC_SELECT_NAME = "VPC를 선택해주세요"   # VPC 선택 셀렉트박스 placeholder 텍스트
     NAME_INPUT = 'input[name="name"]'      # Subnet 이름 입력 필드 
     CIDR_INPUT = 'input[name="cidr"]'      # Subnet CIDR 블록 입력 필드
     CREATE_SUCCESS_TEXT = "Subnet 생성 성공"
@@ -20,7 +20,7 @@ class SubnetPage(BasePage):
         self.page = page
 
     # ============================================================
-    # PROPERTIES (locator 객체를 반환)
+    # PROPERTIES
     # ============================================================ 
     @property
     def name_input(self):

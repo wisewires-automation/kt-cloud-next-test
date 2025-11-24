@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_admin
@@ -29,6 +30,60 @@ def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     return volume_name
 
 # -------------------------
+# Volume 용량 확장 시나리오
+# -------------------------
+def update_volume_size_scenario(page: Page, log, volume_name: str, size: str, sc: ScreenshotSession):
+    volume_page = VolumePage(page)
+
+    volume_page.open_project()
+    volume_page.go_console_menu(S.VOLUME_MENU)
+
+    log.info("[TC-00] Volumn 용량 확장 시작")
+    volume_page.update_volume_size(volume_name=volume_name, size=size)
+    log.info("[TC-00] Volumn 용량 확장 완료 | Volume 이름=%s", volume_name)
+
+    if sc is not None:
+        sc.snap(page, label=volume_name)
+
+# -------------------------
+# Volume Image 생성 시나리오
+# -------------------------
+def create_volume_image_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession) -> str:
+    volume_page = VolumePage(page)
+
+    volume_page.open_project()
+    volume_page.go_console_menu(S.VOLUME_MENU)
+
+    log.info("[TC-00] Volumn Image 생성 시작")
+    volume_image_name = volume_page.create_volume_image(volume_name=volume_name, desc="test volume image 설명입니다")
+    log.info("[TC-00] Volumn Image 생성 완료 | Volume Image 이름=%s", volume_image_name)
+
+    if sc is not None:
+        sc.snap(page, label=volume_image_name)
+
+    return volume_image_name
+
+# -------------------------
+# Volume Snapshot 생성 시나리오
+# -------------------------
+def create_volume_snapshot_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession) -> str:
+    volume_page = VolumePage(page)
+
+    volume_page.open_project()
+    volume_page.go_console_menu(S.VOLUME_MENU)
+
+    log.info("[TC-00] Volumn Snapshot 생성 시작")
+    volume_snap_name = volume_page.create_volume_snapshot(volume_name=volume_name, desc="test volume snapshot 설명입니다")
+    log.info("[TC-00] Volumn Snapshot 생성 완료 | Volume Snapshot 이름=%s", volume_snap_name)
+
+    if sc is not None:
+        sc.snap(page, label=volume_snap_name)
+
+    time.sleep(5)
+
+    return volume_snap_name
+
+# -------------------------
 # Volume 삭제 시나리오
 # -------------------------
 def delete_volume_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession):
@@ -51,11 +106,21 @@ def main():
             # 로그인
             login_as_admin(page, log)
 
+            volume_name = "QA-VOL-001"
             # Volumn 생성
-            volume_name = create_volume_scenario(page, log, sc)
+            # volume_name = create_volume_scenario(page, log, sc)
+
+            # Volumn 용량 확장
+            update_volume_size_scenario(page, log, volume_name=volume_name, size="256", sc=sc)
+
+            # Volumn Image 생성
+            # create_volume_image_scenario(page, log, volume_name=volume_name, sc=sc)
+
+            # Volumn Snapshot 생성
+            # create_volume_snapshot_scenario(page, log, volume_name=volume_name, sc=sc)
 
             # Volumn 삭제
-            delete_volume_scenario(page, log, volume_name, sc)
+            # delete_volume_scenario(page, log, volume_name, sc)
 
         except Exception:
             sc.snap(page, "error")

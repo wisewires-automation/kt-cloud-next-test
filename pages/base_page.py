@@ -38,12 +38,14 @@ class BasePage:
     @property
     def pen_button(self):
         """수정 버튼"""
-        return self.page.locator('button.s-icon-button--small >> span[aria-label="pen"]')
+        return self.page.locator("button.s-icon-button--small").filter(has=self.page.locator('span[aria-label="pen"]')).first
     
     @property
     def check_button(self):
         """수정 확인 버튼"""
-        return self.page.locator('button.s-icon-button--small.s-button--primary >> span[aria-label="check"]')
+        return self.page.locator("button.s-icon-button--small").filter(
+            has=self.page.locator('span[aria-label="check"]')
+        ).first
 
     # ============================================================
     # ACTIONS
@@ -75,8 +77,14 @@ class BasePage:
     def submit(self, text: str = B.CONFIRM_TEXT, timeout: int = 20000):
         """모달 - 확인 버튼 클릭"""
         confirm_btn = self.page.get_by_role("button", name=text).first
-        expect(confirm_btn).to_be_enabled(timeout=timeout)
-        confirm_btn.click()
+        try:
+            expect(confirm_btn).to_be_visible(timeout=timeout)
+            expect(confirm_btn).to_be_enabled(timeout=timeout)
+            confirm_btn.click()
+        except Exception:
+            # viewport 밖이거나 visibility 체크에서 실패한 경우 강제 클릭
+            expect(confirm_btn).to_be_attached(timeout=timeout)
+            confirm_btn.evaluate("el => el.click()")
 
     def open_project(self, project_name: str = "QA-PROJECT-001", timeout: int = 10000):
         """프로젝트 리스트에서 특정 프로젝트 클릭하여 진입"""
@@ -132,13 +140,7 @@ class BasePage:
         timeout: int = 5000,
         poll_interval: float = 0.2,
     ) -> None:
-        """
-        현재 페이지에 떠 있는 모든 alert 토스트를 스캔하며 즉시 성공 또는 실패로 판정
-
-        - alert 이 0개면 poll_interval 만큼 대기 후 재시도
-        - fail_text 가 발견되면 실패(AssertionError)로 우선 처리
-        - success_text 가 발견되면 성공으로 처리
-        """
+        """현재 페이지에 떠 있는 모든 alert 토스트를 스캔하며 즉시 성공 또는 실패로 판정"""
 
         deadline = time.time() + (timeout / 1000.0)
 
