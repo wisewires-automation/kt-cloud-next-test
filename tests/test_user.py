@@ -77,7 +77,7 @@ def delete_user_scenario(page: Page, log, user, sc: ScreenshotSession):
     log.info("[ADMIN] 관리자 페이지 이동")
     user_page.go_manage_admin()
 
-    id = "testid08"
+    id = "testid05"
 
     log.info("[TC-00] 사용자 삭제 시작")
     role_page.click_user_row(id=id)
@@ -85,13 +85,14 @@ def delete_user_scenario(page: Page, log, user, sc: ScreenshotSession):
     user_page.run_delete_flow()
     log.info("[TC-00] 사용자 삭제 완료 | 사용자 ID=%s", id)
 
+    time.sleep(1)
+
     if sc is not None:
         sc.snap(page, label="delete_user")
 
 
 def main():
     user = user_repo.get("TEMP")
-
     with create_page(headless=False) as page, \
         ScreenshotSession(__file__, zip_name=file_name) as sc:
         try:
@@ -108,7 +109,7 @@ def main():
             delete_user_scenario(page, log, user, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] IAM 계정 생성 중 예외 발생")
+            log.exception("[ERROR] 사용자 예외 발생")
             raise
 
 if __name__ == "__main__":

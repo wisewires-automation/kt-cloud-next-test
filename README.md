@@ -56,7 +56,7 @@ SCREENSHOT_PATH = C:\
 ```
 KT-CLOUD-CONSOLE/
 ├─ config/
-│  └─ iam_project_role.json     # IAM 계정 role 설정
+│  └─ users.json                # 사용자 계정 더미데이터
 │
 ├─ pages/                       # Playwright Page Object 모음
 │  ├─ locators/                 # 공통 Locator
@@ -72,7 +72,7 @@ KT-CLOUD-CONSOLE/
 │
 ├─ utils/
 │  ├─ capture.py                 # 스크린샷 유틸
-│  ├─ iam_user_config.py         # config/iam_project_role.json 로더
+│  ├─ user.py                    # config/users.json 로더
 │  ├─ logger.py                  # 공통 로깅 설정 (logs/test.log 등)
 │  ├─ namer.py                   # 랜덤 이름 생성 유틸
 │  └─ playwright_helpers.py      # Playwright 세션/로그인 헬퍼

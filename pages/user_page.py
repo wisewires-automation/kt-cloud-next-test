@@ -2,6 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
+from pages.locators.actions import SidebarLocators as S
 
 class UserPage(BasePage):
     # ============================================================
@@ -78,6 +79,7 @@ class UserPage(BasePage):
         self.phone_input.fill(phone)
 
     def fill_pw_form(self, password: str):
+        """사용자 비밀번호/비밀번호 확인 입력"""
         # 비밀번호 자동 생성 스위치 off
         self.switch_label.first.click()
 
@@ -86,12 +88,13 @@ class UserPage(BasePage):
     
     def click_delete_user(self, timeout: int = 10000):
         """사용자 삭제 버튼 클릭"""
-        btn = self.delete_user_button.click()
-        expect(btn).to_be_visible(timeout=timeout)
-        btn.click()
+        btn = self.page.get_by_role("button", name=self.DELETE_USER_TEXT).first
+        expect(btn).to_be_attached(timeout=timeout)
+        btn.evaluate("el => el.click()")
     
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_user(self, id: str, name: str, email: str, phone: str, password: str) -> str:
+        """사용자 생성 플로우"""
         self.fill_form(id, name, email, phone)
         self.fill_pw_form(password)
         self.submit()

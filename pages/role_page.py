@@ -24,7 +24,9 @@ class RolePage:
         self.project_role_radio = self.radio_group.filter(has_text=self.PROJECT_ROLE_TEXT)
 
 
-    # ===== 공통 동작 =====
+    # ============================================================
+    # ACTIONS
+    # ============================================================
     def click_user_row(self, id: str, timeout: int = 10000):
         # id와 일치하는 row 클릭
         user_row = self.row.filter(has=self.page.locator(self.login_id_cell, has_text=id))
