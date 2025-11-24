@@ -37,12 +37,12 @@ class BasePage:
     
     @property
     def pen_button(self):
-        """수정 버튼"""
+        """이름 수 정시 펜 버튼"""
         return self.page.locator("button.s-icon-button--small").filter(has=self.page.locator('span[aria-label="pen"]')).first
     
     @property
     def check_button(self):
-        """수정 확인 버튼"""
+        """이름 수정 시 체크 버튼"""
         return self.page.locator("button.s-icon-button--small").filter(
             has=self.page.locator('span[aria-label="check"]')
         ).first
@@ -103,7 +103,7 @@ class BasePage:
         link.click()
 
     def run_rename_flow(self, new_name: str, timeout: int = 10000) -> str:
-        """이름 수정"""
+        """이름 수정(펜) 클릭 > 수정 > 저장"""
         pen_btn = self.pen_button
         expect(pen_btn).to_be_enabled(timeout=timeout)
         pen_btn.click()
@@ -114,8 +114,6 @@ class BasePage:
         expect(check_btn).to_be_enabled(timeout=timeout)
         check_btn.click()
         
-        # expect(self.page.get_by_text(T.UPDATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
-
     def open_delete_modal(self, timeout: int = 10000):
         """삭제 모달 오픈"""
         open_btn = self.delete_open_button
@@ -131,8 +129,8 @@ class BasePage:
         confirm_btn = self.delete_confirm_button
         expect(confirm_btn).to_be_enabled(timeout=timeout)
         confirm_btn.click()
-        # expect(self.page.get_by_text(T.DELETE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
+    # NOTE: 20251125 아직 수정중인 코드
     def wait_toast_success_or_fail(
         self,
         success_text: str,
