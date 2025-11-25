@@ -5,7 +5,7 @@ from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
 from utils.users import user_repo
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.actions import CreateButtonLocators as C
 from pages.user_page import UserPage
 
 file_name = Path(__file__).stem
@@ -88,31 +88,6 @@ def update_user_password_scenario(page: Page, log, sc: ScreenshotSession) -> str
         sc.snap(page, label=user_id)
 
 # -------------------------
-# 사용자 권한 부여 시나리오
-# -------------------------
-def grant_role_scenario(page: Page, log, user, sc: ScreenshotSession):
-
-    user_page = UserPage(page)
-
-    log.info("[ADMIN] 관리자 페이지 이동")
-    user_page.go_manage_admin()
-
-    log.info("[ADMIN] IAM 사용자 클릭 | id=%s", user.id)
-    user_page.click_user_row(id=user.id)
-    user_page.click_role_edit()
-
-    # log.info("[ADMIN] 라디오 그룹 선택")
-    # user_page.click_radio_group(is_org=False)
-
-    log.info("[ADMIN] 역할 선택")
-    user_page.click_role_checkbox_by_name("USER_MANAGER")
-
-    time.sleep(5)
-
-    if sc is not None:
-        sc.snap(page, label="update_role")
-
-# -------------------------
 # 사용자 삭제 시나리오
 # -------------------------
 def delete_user_scenario(page: Page, log, user, sc: ScreenshotSession):
@@ -151,9 +126,6 @@ def main():
 
             # 사용자 비밀변호 변경
             update_user_password_scenario(page, log, sc)
-
-            # 사용자 권한 부여
-            # grant_role_scenario(page, log, user, sc)
 
             # 사용자 삭제
             delete_user_scenario(page, log, user, sc)
