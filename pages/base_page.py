@@ -130,6 +130,23 @@ class BasePage:
         expect(confirm_btn).to_be_enabled(timeout=timeout)
         confirm_btn.click()
 
+    def open_modal(self, text: str, timeout: int = 10000):
+        """모달 오픈"""
+        # s-button s-button--medium s-button--secondary
+        btn = self.page.locator("button.s-button--secondary", has_text=text)
+        expect(btn).to_be_visible(timeout=timeout)
+        btn.click()
+
+    def run_modal_flow(self, text: str, timeout: int = 10000):
+        """텍스트 입력 > 최종 삭제 버튼 클릭"""
+        input = self.page.get_by_role("textbox", name="input")
+        expect(input).to_be_visible(timeout=timeout)
+        input.fill(text)
+
+        confirm_btn = self.page.locator(f'button[aria-label="{text}"]')
+        expect(confirm_btn).to_be_enabled(timeout=timeout)
+        confirm_btn.click()
+
     # NOTE: 20251125 아직 수정중인 코드
     def wait_toast_success_or_fail(
         self,
