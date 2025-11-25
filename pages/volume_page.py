@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect, Locator
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class VolumePage(BasePage):
     # ============================================================
@@ -144,7 +144,7 @@ class VolumePage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_volume(self, desc: str, size: str) -> str:
         """Volume 생성 플로우"""
-        volume_name = make_name(prefix="QA-VOLUME-")
+        volume_name = generate_name(prefix="QA-VOLUME-")
 
         self.fill_form(name=volume_name, desc=desc)
         self.select_option_by_index() # Volume 유형
@@ -168,7 +168,7 @@ class VolumePage(BasePage):
         self.open_row_menu(volume_name)
         self.click_in_menu(menu_name="Volume으로 이미지 생성")
 
-        volume_image_name = make_name(prefix="QA-VIMG-")
+        volume_image_name = generate_name(prefix="QA-VIMG-")
         self.fill_image_form(name=volume_image_name, desc=desc)
         self.click_button()
 
@@ -179,7 +179,7 @@ class VolumePage(BasePage):
         self.open_row_menu(volume_name)
         self.click_in_menu(menu_name="Volume snapshot 생성")
 
-        volume_snap_name = make_name(prefix="QA-VSNAP-")
+        volume_snap_name = generate_name(prefix="QA-VSNAP-")
         self.fill_snap_form(name=volume_snap_name, desc=desc)
         self.click_button()
 

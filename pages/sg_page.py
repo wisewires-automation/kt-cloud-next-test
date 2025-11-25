@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class SGPage(BasePage):
     # ============================================================
@@ -40,7 +40,7 @@ class SGPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_sg(self) -> str:
         """Security Group 생성 플로우"""
-        sg_name = make_name(prefix="QA-SG-")
+        sg_name = generate_name(prefix="QA-SG-")
         self.fill_form(name=sg_name)
         self.click_button(text=B.CREATE_BUTTON_NAME)
         return sg_name

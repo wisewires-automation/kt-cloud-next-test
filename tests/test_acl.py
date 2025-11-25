@@ -2,7 +2,7 @@ from pathlib import Path
 from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.acl_page import ACLPage
 
@@ -80,7 +80,7 @@ def main():
             # delete_acl_scenario(page, log, acl_name, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] Network ACL 생성 중 예외 발생")
+            log.exception("Network ACL 시나리오 실행 중 예외 발생")
             raise
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 from pages.vpc_page import VPCPage
 from pages.subnet_page import SubnetPage
@@ -155,7 +155,7 @@ class ServerPage(BasePage):# ===================================================
         # NOTE: 현재는 기본 AZ 옵션만 선택 (필요 시 index 기반 선택으로 확장 가능)
         self.az_option_default.first.click()
 
-        server_name = make_name(prefix="QA-SERVER-")
+        server_name = generate_name(prefix="QA-SERVER-")
         self.server_name_input.fill(server_name)
 
         return server_name

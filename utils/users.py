@@ -5,7 +5,6 @@ from typing import Dict
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "users.json"
 
-
 @dataclass
 class TestUser:
     key: str          # JSON 상의 키 (예: "SERVER_MANAGER")
@@ -14,7 +13,6 @@ class TestUser:
     email: str
     phone: str
     password: str
-
 
 class UserRepository:
     def __init__(self, path: Path = CONFIG_PATH):

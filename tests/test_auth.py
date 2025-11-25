@@ -3,7 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from utils.playwright_helpers import create_page
 from utils.logger import get_logger
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.auth_page import AuthPage
 
@@ -64,7 +64,7 @@ def main():
             # test_iam_login(page, log, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] 로그인 도중 예외 발생")
+            log.exception("로그인 시나리오 실행 중 예외 발생")
             raise
 if __name__ == "__main__":
     main()

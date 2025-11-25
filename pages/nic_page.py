@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class NICPage(BasePage):
     # ============================================================
@@ -102,7 +102,7 @@ class NICPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_nic(self, select_network: bool = False) -> str:
         """Network Interface 생성 플로우"""
-        nic_name = make_name(prefix="QA-NIC-")
+        nic_name = generate_name(prefix="QA-NIC-")
         self.fill_form(name=nic_name)
 
         if select_network:

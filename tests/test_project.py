@@ -3,7 +3,7 @@ from pathlib import Path
 from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 from pages.locators.actions import SidebarLocators as S
 
 from pages.project_page import ProjectPage
@@ -87,7 +87,7 @@ def main():
             # delete_project_scenario(page, log, project_name=project_name, sc=sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] 프로젝트 시나리오 중 예외 발생")
+            log.exception("프로젝트 시나리오 실행 중 예외 발생")
             raise
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class ACLPage(BasePage):
     # ============================================================
@@ -42,7 +42,7 @@ class ACLPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_acl(self) -> str:
         """Network ACL 생성 플로우"""
-        acl_name = make_name(prefix="QA-ACL-")
+        acl_name = generate_name(prefix="QA-ACL-")
 
         self.fill_form(name=acl_name)
         self.click_button(text=B.CREATE_BUTTON_NAME)

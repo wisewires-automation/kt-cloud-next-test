@@ -5,7 +5,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
 from pages.locators.actions import CreateButtonLocators as C
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class ProjectPage(BasePage):
 
@@ -166,7 +166,7 @@ class ProjectPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_project(self, desc: str = "qa project 자동 생성",  timeout: int = 20000) -> str:
         """프로젝트 생성"""
-        project_name = make_name(prefix="QA-PROJECT-")
+        project_name = generate_name(prefix="QA-PROJECT-")
         # project_name = "TEST_CREATE_SERVER"
 
         self.click_project_create()

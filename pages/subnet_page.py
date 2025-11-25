@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class SubnetPage(BasePage):
     # ============================================================
@@ -71,7 +71,7 @@ class SubnetPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_subnet(self, cidr: str = "10.0.0.0/8", vpc_name: str = "QA-VPC-003", timeout: int = 10000) -> str:
         """Subnet 생성 플로우"""
-        subnet_name = make_name(prefix="QA-SUB-")
+        subnet_name = generate_name(prefix="QA-SUB-")
 
         # VPC명이 없으면 첫번째 옵션 선택
         if vpc_name:

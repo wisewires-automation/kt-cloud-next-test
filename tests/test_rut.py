@@ -3,7 +3,7 @@ from pathlib import Path
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 
 from pages.rut_page import RUTPage
 
@@ -39,7 +39,7 @@ def main():
             rut_name = create_rut_scenario(page, log, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] Route Table 생성 중 예외 발생")
+            log.exception("Route Table 시나리오 실행 중 예외 발생")
             raise
 
 if __name__ == "__main__":

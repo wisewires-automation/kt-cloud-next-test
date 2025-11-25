@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class VPCPage(BasePage):
     # ============================================================
@@ -40,7 +40,7 @@ class VPCPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_vpc(self, cidr: str = "10.0.0.0/8", timeout: int = 10000) -> str:
         """VPC 생성 플로우"""
-        vpc_name = make_name(prefix="QA-VPC-")
+        vpc_name = generate_name(prefix="QA-VPC-")
         self.fill_form(name=vpc_name, cidr=cidr)
         self.click_button()
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)

@@ -3,7 +3,7 @@ from pathlib import Path
 from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 from utils.users import user_repo
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.user_page import UserPage
@@ -159,7 +159,7 @@ def main():
             delete_user_scenario(page, log, user, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] 사용자 예외 발생")
+            log.exception("사용자 시나리오 실행 중 예외 발생")
             raise
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from playwright.sync_api import Page
 from pathlib import Path
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
-from utils.capture import ScreenshotSession
+from utils.screenshot import ScreenshotSession
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.sg_page import SGPage
 
@@ -38,7 +38,7 @@ def main():
             sg_name = create_sg_scenario(page, log, sc)
         except Exception:
             sc.snap(page, "error")
-            log.exception("[ERROR] Security Group 생성 중 예외 발생")
+            log.exception("Security Group 시나리오 실행 중 예외 발생")
             raise
 
 if __name__ == "__main__":

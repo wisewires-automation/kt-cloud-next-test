@@ -71,10 +71,10 @@ KT-CLOUD-CONSOLE/
 │  └─ ...                       # 기타 테스트 케이스들
 │
 ├─ utils/
-│  ├─ capture.py                 # 스크린샷 유틸
+│  ├─ screenshot.py              # 스크린샷 유틸
 │  ├─ user.py                    # config/users.json 로더
 │  ├─ logger.py                  # 공통 로깅 설정 (logs/test.log 등)
-│  ├─ namer.py                   # 랜덤 이름 생성 유틸
+│  ├─ name_generator.py          # 랜덤 이름 생성 유틸
 │  └─ playwright_helpers.py      # Playwright 세션/로그인 헬퍼
 │
 ├─ logs/                         # 로깅 출력 디렉터리

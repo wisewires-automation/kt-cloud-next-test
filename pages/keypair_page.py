@@ -3,7 +3,7 @@
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
-from utils.namer import make_name_only_alpha
+from utils.name_generator import generate_name
 
 class KeypairPage(BasePage):
     # ============================================================
@@ -71,8 +71,8 @@ class KeypairPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_kp(self) -> str:
         """Key Pair 생성 플로우"""
-        kp_name = make_name_only_alpha(prefix="QA-KEY-")
-        
+        kp_name = generate_name("QA-KEY-", letters_only=True)
+
         self.name_input.fill(kp_name)
         self.click_confirm_button()
         self.click_close_button()

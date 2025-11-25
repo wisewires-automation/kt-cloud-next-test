@@ -37,7 +37,7 @@ class BasePage:
     
     @property
     def pen_button(self):
-        """이름 수 정시 펜 버튼"""
+        """이름 수정시 펜 버튼"""
         return self.page.locator("button.s-icon-button--small").filter(has=self.page.locator('span[aria-label="pen"]')).first
     
     @property

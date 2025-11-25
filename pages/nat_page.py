@@ -4,7 +4,7 @@ from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.locators.common import ToastLocators as T, ButtonLocators as B
-from utils.namer import make_name
+from utils.name_generator import generate_name
 
 class NATPage(BasePage):
     # ============================================================
@@ -64,7 +64,7 @@ class NATPage(BasePage):
 
     def create_nat(self, desc: str = "", vpc_name: str = "") -> str:
         """NAT Gateway 생성 플로우"""
-        nat_name = make_name(prefix="QA-NAT-")
+        nat_name = generate_name(prefix="QA-NAT-")
 
         # VPC 명이 있을 경우 해당 이름으로 선택, 없을 경우 첫 번째 옵션 선택
         if vpc_name:
