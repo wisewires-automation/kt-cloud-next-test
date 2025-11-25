@@ -1,3 +1,4 @@
+import time
 import os
 import inspect
 import zipfile
@@ -86,6 +87,9 @@ class ScreenshotSession:
             * True       : 먼저 screenshots 디렉토리에 png 파일로 저장 후,
                            그 파일을 zip에 추가
         """
+        # 결과 화면 캡쳐를 위해 추가
+        time.sleep(1)
+
         # 파일명용 라벨 정리
         safe_label = label.strip().replace(" ", "_").lower() if label else "snap"
 
