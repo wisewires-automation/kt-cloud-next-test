@@ -1,5 +1,6 @@
 # Python 캐시
 __pycache__/
+__init__.py
 .pytest_cache
 *.pyc
 .venv
@@ -17,3 +18,5 @@ logs
 screenshots
 node_modules
 package-lock.json
+
+tools/
