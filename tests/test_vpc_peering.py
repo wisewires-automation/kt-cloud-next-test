@@ -74,22 +74,70 @@ def delete_vpc_peering_scenario(page: Page, log, vpc_p_name: str, sc: Screenshot
     if sc is not None:
         sc.snap(page, label=vpc_p_name)
 
+# -------------------------
+# VPC Peering 요청 수락 시나리오
+# -------------------------
+def accept_vpc_peering_scenario(page: Page, log, vpc_p_name: str, sc: ScreenshotSession):
+    vpc_p_page = VPCPeeringPage(page)
+
+    vpc_p_page.open_project()
+    vpc_p_page.go_console_menu(S.VPC_P_MENU)
+    
+    log.info("[TC-00] VPC Peering 요청 수락 시작 | VPC Peering 이름=%s", vpc_p_name)
+    vpc_p_page.go_link_by_name(name=vpc_p_name)
+    vpc_p_page.open_modal(text="요청 수락")
+    vpc_p_page.run_modal_flow(text="수락")
+    log.info("[TC-00] VPC Peering 요청 수락 완료")
+
+    time.sleep(2)
+
+    if sc is not None:
+        sc.snap(page, label=vpc_p_name)
+
+# -------------------------
+# VPC Peering 요청 거절 시나리오
+# -------------------------
+def reject_vpc_peering_scenario(page: Page, log, vpc_p_name: str, sc: ScreenshotSession):
+    vpc_p_page = VPCPeeringPage(page)
+
+    vpc_p_page.open_project()
+    vpc_p_page.go_console_menu(S.VPC_P_MENU)
+    
+    log.info("[TC-00] VPC Peering 요청 거절 시작 | VPC Peering 이름=%s", vpc_p_name)
+    vpc_p_page.go_link_by_name(name=vpc_p_name)
+    vpc_p_page.open_modal(text="요청 거절")
+    vpc_p_page.run_modal_flow(text="거절")
+    log.info("[TC-00] VPC Peering 요청 거절 완료")
+
+    time.sleep(2)
+
+    if sc is not None:
+        sc.snap(page, label=vpc_p_name)
+        
+
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
         try:
             # 로그인
             login_as_admin(page, log)
 
-            vpc_p_name = "qa-vp-002"
+            vpc_p_name = "QA-VPC-P-2J7T"
 
             # VPC Peering 생성
-            vpc_p_name = create_vpc_peering_scenario(page, log, sc)
+            # vpc_p_name = create_vpc_peering_scenario(page, log, sc)
 
             # VPC Peering  수정
             # update_vpc_peering_scenario(page, log, vpc_p_name, new_name=f"{vpc_p_name}-edited", sc=sc)
 
             # VPC Peering 삭제
             # delete_vpc_peering_scenario(page, log, vpc_p_name, sc)
+
+            # VPC Peering 요청 수락
+            # accept_vpc_peering_scenario(page, log, vpc_p_name, sc)
+
+            # VPC Peering 요청 거절
+            reject_vpc_peering_scenario(page, log, vpc_p_name, sc)
+
         except Exception:
             sc.snap(page, "error")
             log.exception("VPC 시나리오 실행 중 예외 발생")
