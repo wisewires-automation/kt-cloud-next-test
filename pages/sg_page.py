@@ -55,3 +55,16 @@ class SGPage(BasePage):
         self.click_button(text=B.CREATE_BUTTON_NAME)
 
         return sg_name
+    
+    def update_sg(self, nacl_name: str, new_name: str, desc: str = ""):
+        """Security Group 수정 플로우"""
+        self.go_link_by_name(name=nacl_name)
+        self.open_modal(text="수정")
+        self.fill_form(name=new_name, desc=desc)
+        self._safe_click(self.edit_confirm_button)
+    
+    def delete_sg(self, nacl_name: str):
+        """Security Group 삭제 플로우"""
+        self.go_link_by_name(name=nacl_name)
+        self.open_delete_modal()
+        self.run_delete_flow()

@@ -23,7 +23,7 @@ def create_sg_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     sg_name = sg_page.create_sg()
     log.info("[TC-00] Security Group 생성 완료 | Security Group 이름=%s", sg_name)
 
-    sc.snap(page, label="create_sg")
+    sc.snap(page, label="create_sg", delay_sec=1.0)
     
     return sg_name
 
@@ -32,6 +32,8 @@ def main():
         try:
             # 로그인
             login_as_admin(page, log)
+            
+            sg_name = "QA-SG-287V"
 
             # Security Group 생성
             sg_name = create_sg_scenario(page, log, sc)
