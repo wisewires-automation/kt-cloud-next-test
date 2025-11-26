@@ -1,6 +1,6 @@
 """ Floating IP POM """
 
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
 from pages.locators.actions import CreateButtonLocators as C
@@ -15,16 +15,27 @@ class FIPPage(BasePage):
         super().__init__(page)
         self.page = page
 
-        # ============================================================
+    # ============================================================
+    # PROPERTIES
+    # ============================================================ 
+    @property
+    def id_cell(self):
+        """이름 셀"""
+        return self.page.locator(".ag-pinned-left-cols-container [role='gridcell'][col-id='id']")
+
+    # ============================================================
     # ACTIONS
     # ============================================================
-    def fill_form(self, name: str, desc: str):
-        """네트워크 ACL 이름, 설명 입력"""
-        self.name_input.fill(name)
+    def go_link_by_id(self, name: str, timeout: int = 10000) -> None:
+        """이름 링크 페이지로 이동"""
+        cell = self.id_cell.filter(has_text=name).first
+        expect(cell).to_be_visible(timeout=timeout)
 
-        if desc is not None:
-            self.desc_input.fill(desc)
-        
+        link = cell.locator("a").first
+        expect(link).to_be_visible(timeout=timeout)
+
+        link.click()
+
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_fip(self) -> str:
         """Floating IP 생성 플로우"""
@@ -33,6 +44,7 @@ class FIPPage(BasePage):
     
     def delete_fip(self, fip_name: str):
         """Floating IP 삭제 플로우"""
-        self.go_link_by_name(name=fip_name)
+        self.go_link_by_id(name=fip_name)
         self.open_delete_modal()
         self.run_delete_flow()
+        # 삭제 완료
