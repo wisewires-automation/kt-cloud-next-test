@@ -42,11 +42,6 @@ class IGPage(BasePage):
 
         return ig_name
     
-    def update_ig_name(self, ig_name: str, new_name: str):
-        """Internet Gateway 수정 플로우"""
-        self.go_link_by_name(name=ig_name)
-        self.run_rename_flow(new_name=new_name)
-    
     def delete_ig(self, ig_name: str):
         """Internet Gateway 삭제 플로우"""
         self.go_link_by_name(name=ig_name)
