@@ -15,7 +15,7 @@ log = get_logger(file_name)
 def create_user_group_scenario(page: Page, log, name:str, desc: str, sc: ScreenshotSession):
     group_page = UserGroupPage(page)
 
-    log.info("관리자 페이지 이동")
+    log.info("사용자 그룹 페이지로 이동")
     group_page.go_manage_admin()
     group_page.go_user_group_menu()
 
@@ -23,11 +23,7 @@ def create_user_group_scenario(page: Page, log, name:str, desc: str, sc: Screens
     group_page.create_user_group(name, desc)
     log.info("[TC-00] 사용자 그룹 생성 완료")
 
-    # 사용자 생성된 화면 캡쳐를 위해 추가
-    time.sleep(2)
-
-    if sc is not None:
-        sc.snap(page, label="create_user_group")
+    sc.snap(page, label="create_user_group", delay_sec=1.0)
 
 # -------------------------
 # 사용자 그룹 삭제 시나리오
@@ -35,7 +31,7 @@ def create_user_group_scenario(page: Page, log, name:str, desc: str, sc: Screens
 def delete_user_group_scenario(page: Page, log, group_name: str, sc: ScreenshotSession):
     group_page = UserGroupPage(page)
 
-    log.info("관리자 페이지 이동")
+    # log.info("사용자 그룹 페이지로 이동")
     # group_page.go_manage_admin()
     # group_page.go_user_group_menu()
 
@@ -43,10 +39,41 @@ def delete_user_group_scenario(page: Page, log, group_name: str, sc: ScreenshotS
     group_page.delete_user_group(group_name)
     log.info("[TC-00] 사용자 그룹 삭제 완료 | 사용자 그룹 이름=%s", group_name)
 
-    time.sleep(1)
+    sc.snap(page, label="delete_user_group")
 
-    if sc is not None:
-        sc.snap(page, label="delete_user_group")
+# -------------------------
+# 사용자 그룹 멤버 추가 시나리오
+# -------------------------
+def add_group_member_scenario(page: Page, log, group_name: str, sc: ScreenshotSession):
+    group_page = UserGroupPage(page)
+
+    log.info("사용자 그룹 페이지로 이동")
+    group_page.go_manage_admin()
+    group_page.go_user_group_menu()
+
+    log.info("[TC-00] 사용자 그룹 멤버 추가 시작")
+    user_ids = ["187a48da-aa78-48c0-ac90-8b1ab27b7d24", "2816a086-a09b-431e-8b40-405be7f9301e"]
+    group_page.add_group_member(group_name, user_ids)
+    log.info("[TC-00] 사용자 그룹 멤버 추가 완료")
+
+    sc.snap(page, label="add_group_member", delay_sec=1.0)
+
+# -------------------------
+# 사용자 그룹 멤버 삭제 시나리오
+# -------------------------
+def delete_group_member_scenario(page: Page, log, group_name: str, sc: ScreenshotSession):
+    group_page = UserGroupPage(page)
+
+    log.info("사용자 그룹 페이지로 이동")
+    group_page.go_manage_admin()
+    group_page.go_user_group_menu()
+
+    log.info("[TC-00] 사용자 그룹 멤버 삭제 시작")
+    user_ids = ["187a48da-aa78-48c0-ac90-8b1ab27b7d24", "2816a086-a09b-431e-8b40-405be7f9301e"]
+    group_page.delete_group_member(group_name, user_ids)
+    log.info("[TC-00] 사용자 그룹 멤버 삭제 완료")
+
+    sc.snap(page, label="delete_group_member", delay_sec=1.0)
 
 def main():
     with create_page(headless=False) as page, \
@@ -55,14 +82,20 @@ def main():
             # 관리자 로그인
             login_as_admin(page, log)
 
-            name="user-group-05"
+            name="user-group-01"
             desc="사용자 그룹 생성 테스트"
 
             # 사용자 그룹 생성
-            create_user_group_scenario(page, log, name, desc, sc)
+            # create_user_group_scenario(page, log, name, desc, sc)
 
             # 사용자 그룹 삭제
-            delete_user_group_scenario(page, log, name, sc)
+            # delete_user_group_scenario(page, log, name, sc)
+
+            # 사용자 그룹 멤버 추가
+            add_group_member_scenario(page, log, group_name=name, sc=sc)
+
+            # 사용자 그룹 멤버 삭제
+            # delete_group_member_scenario(page, log, group_name=name, sc=sc)
         except Exception:
             sc.snap(page, "error")
             log.exception("사용자 그룹 시나리오 실행 중 예외 발생")
