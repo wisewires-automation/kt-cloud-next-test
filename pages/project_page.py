@@ -125,13 +125,18 @@ class ProjectPage(BasePage):
             self.new_project.scroll_into_view_if_needed(timeout=timeout)
             self.new_project.click()
 
-    def fill_form(self, name: str, desc: str = ""):
-        """프로젝트 이름, 설명 입력"""
-        if name is not None:
-            self.name_input.fill(name)
+    def enter_name(self, name):
+        """프로젝트 이름 입력"""
+        self.name_input.fill(name)
 
-        if desc is not None:
-            self.desc_input.fill(desc)
+    def enter_desc(self, desc):
+        """프로젝트 설명 입력"""
+        self.desc_input.fill(desc)
+
+    def fill_form(self, name: str, desc: str):
+        """프로젝트 폼 입력"""
+        self.enter_name(name)
+        self.enter_desc(desc)
 
     def click_service_in_use_tab(self, timeout: int = 10000):
         """이용중인 서비스 탭 클릭"""

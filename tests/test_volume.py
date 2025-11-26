@@ -16,16 +16,15 @@ log = get_logger(file_name)
 def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     volume_page = VolumePage(page)
 
+    log.info("Volume 페이지로 이동")
     volume_page.open_project()
     volume_page.go_console_menu(S.VOLUME_MENU)
 
     log.info("[TC-00] Volumn 생성 시작")
-    volume_page.open_create_modal(C.VOLUME_CREATE)
     volume_name = volume_page.create_volume(desc="test volume 설명입니다", size="128")
     log.info("[TC-00] Volumn 생성 완료 | Volume 이름=%s", volume_name)
 
-    if sc is not None:
-        sc.snap(page, label=volume_name)
+    sc.snap(page, label="create_volume")
 
     return volume_name
 
@@ -35,6 +34,7 @@ def create_volume_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def update_volume_size_scenario(page: Page, log, volume_name: str, size: str, sc: ScreenshotSession):
     volume_page = VolumePage(page)
 
+    log.info("Volume 페이지로 이동")
     volume_page.open_project()
     volume_page.go_console_menu(S.VOLUME_MENU)
 
@@ -42,8 +42,7 @@ def update_volume_size_scenario(page: Page, log, volume_name: str, size: str, sc
     volume_page.update_volume_size(volume_name=volume_name, size=size)
     log.info("[TC-00] Volumn 용량 확장 완료 | Volume 이름=%s", volume_name)
 
-    if sc is not None:
-        sc.snap(page, label=volume_name)
+    sc.snap(page, label="update_volume_size")
 
 # -------------------------
 # Volume Image 생성 시나리오
@@ -51,6 +50,7 @@ def update_volume_size_scenario(page: Page, log, volume_name: str, size: str, sc
 def create_volume_image_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession) -> str:
     volume_page = VolumePage(page)
 
+    log.info("Volume 페이지로 이동")
     volume_page.open_project()
     volume_page.go_console_menu(S.VOLUME_MENU)
 
@@ -58,8 +58,7 @@ def create_volume_image_scenario(page: Page, log, volume_name: str, sc: Screensh
     volume_image_name = volume_page.create_volume_image(volume_name=volume_name, desc="test volume image 설명입니다")
     log.info("[TC-00] Volumn Image 생성 완료 | Volume Image 이름=%s", volume_image_name)
 
-    if sc is not None:
-        sc.snap(page, label=volume_image_name)
+    sc.snap(page, label="creaet_volume_img")
 
     return volume_image_name
 
@@ -69,6 +68,7 @@ def create_volume_image_scenario(page: Page, log, volume_name: str, sc: Screensh
 def create_volume_snapshot_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession) -> str:
     volume_page = VolumePage(page)
 
+    log.info("Volume 페이지로 이동")
     volume_page.open_project()
     volume_page.go_console_menu(S.VOLUME_MENU)
 
@@ -76,10 +76,7 @@ def create_volume_snapshot_scenario(page: Page, log, volume_name: str, sc: Scree
     volume_snap_name = volume_page.create_volume_snapshot(volume_name=volume_name, desc="test volume snapshot 설명입니다")
     log.info("[TC-00] Volumn Snapshot 생성 완료 | Volume Snapshot 이름=%s", volume_snap_name)
 
-    if sc is not None:
-        sc.snap(page, label=volume_snap_name)
-
-    time.sleep(5)
+    sc.snap(page, label="create_volume_snap")
 
     return volume_snap_name
 
@@ -89,16 +86,15 @@ def create_volume_snapshot_scenario(page: Page, log, volume_name: str, sc: Scree
 def delete_volume_scenario(page: Page, log, volume_name: str, sc: ScreenshotSession):
     volume_page = VolumePage(page)
     
+    # log.info("Volume 페이지로 이동")
     # volume_page.open_project()
     # volume_page.go_console_menu(S.VOLUME_MENU)
     
     log.info("[TC-00] Volume 삭제 시작 | Volume 이름=%s", volume_name)
     volume_page.delete_volume(volume_name)
-    volume_page.run_delete_flow()
     log.info("[TC-00] Volume 삭제 완료")
 
-    if sc is not None:
-        sc.snap(page, label=volume_name)
+    sc.snap(page, label="delete_volume")
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:

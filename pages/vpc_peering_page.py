@@ -3,6 +3,7 @@
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from utils.name_generator import generate_name
+from pages.locators.actions import CreateButtonLocators as C
 
 class VPCPeeringPage(BasePage):
     # ============================================================
@@ -76,6 +77,8 @@ class VPCPeeringPage(BasePage):
         """VPC Peering 생성 플로우"""
         vpc_p_name = generate_name(prefix="QA-VPC-P-")
 
+        self.open_create_modal(C.VPC_PEERING_CREATE)
+
         # 이름 입력
         self.enter_name(name=vpc_p_name)
 
@@ -89,3 +92,26 @@ class VPCPeeringPage(BasePage):
         self.click_button()
 
         return vpc_p_name
+    
+    def update_vpc_peering(self, vpc_p_name: str, new_name: str):
+        """VPC Peering 수정 플로우"""
+        self.go_link_by_name(name=vpc_p_name)
+        self.run_rename_flow(new_name=new_name)
+    
+    def delete_vpc_peering(self, vpc_p_name: str):
+        """VPC Peering 삭제 플로우"""
+        self.go_link_by_name(name=vpc_p_name)
+        self.open_delete_modal()
+        self.run_delete_flow()
+
+    def accept_vpc_peering(self, vpc_p_name: str):
+        """VPC Peering 요청 수락 플로우"""
+        self.go_link_by_name(name=vpc_p_name)
+        self.open_modal(text="요청 수락")
+        self.run_modal_flow(text="수락")
+    
+    def reject_vpc_peering(self, vpc_p_name: str):
+        """VPC Peering 요청 거절 플로우"""
+        self.go_link_by_name(name=vpc_p_name)
+        self.open_modal(text="요청 거절")
+        self.run_modal_flow(text="거절")

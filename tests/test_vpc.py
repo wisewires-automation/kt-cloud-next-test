@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.actions import SidebarLocators as S
 from pages.vpc_page import VPCPage
 
 load_dotenv()
@@ -21,16 +21,15 @@ def create_vpc_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     
     vpc_page = VPCPage(page)
 
+    log.info("VPC 페이지로 이동")
     vpc_page.open_project()
     vpc_page.go_console_menu(S.VPC_MENU)
     
     log.info("[TC-00] VPC 생성 시작")
-    vpc_page.open_create_modal(C.VPC_CREATE)
     vpc_name = vpc_page.create_vpc(cidr=cidr)
     log.info("[TC-00] VPC 생성 완료 | VPC 이름=%s", vpc_name)
 
-    if sc is not None:
-        sc.snap(page, label=vpc_name)
+    sc.snap(page, label="create_vpc")
     
     return vpc_name
 
@@ -40,16 +39,15 @@ def create_vpc_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def update_vpc_scenario(page: Page, log, vpc_name: str, new_name: str, sc: ScreenshotSession):
     vpc_page = VPCPage(page)
 
+    log.info("VPC 페이지로 이동")
     vpc_page.open_project()
     vpc_page.go_console_menu(S.VPC_MENU)
     
     log.info("[TC-00] VPC 수정 시작 | VPC 이름=%s", vpc_name)
-    vpc_page.go_link_by_name(name=vpc_name)
-    vpc_name = vpc_page.run_rename_flow(new_name=new_name)
+    vpc_page.update_vpc(vpc_name, new_name)
     log.info("[TC-00] VPC 수정 완료 | 변경된 VPC 이름=%s", new_name)
 
-    if sc is not None:
-        sc.snap(page, label=vpc_name)
+    sc.snap(page, label="update_vpc")
 
 
 # -------------------------
@@ -58,19 +56,15 @@ def update_vpc_scenario(page: Page, log, vpc_name: str, new_name: str, sc: Scree
 def delete_vpc_scenario(page: Page, log, vpc_name: str, sc: ScreenshotSession):
     vpc_page = VPCPage(page)
 
+    # log.info("VPC 페이지로 이동")
     # vpc_page.open_project()
     # vpc_page.go_console_menu(S.VPC_MENU)
     
     log.info("[TC-00] VPC 삭제 시작 | VPC 이름=%s", vpc_name)
-    # vpc_page.go_link_by_name(name=vpc_name)
-    vpc_page.open_delete_modal()
-    vpc_page.run_delete_flow()
+    vpc_page.delete_vpc(vpc_name)
     log.info("[TC-00] VPC 삭제 완료")
 
-    time.sleep(3)
-
-    if sc is not None:
-        sc.snap(page, label=vpc_name)
+    sc.snap(page, label="delete_vpc", delay_sec=2.0)
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:

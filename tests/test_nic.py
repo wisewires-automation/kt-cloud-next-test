@@ -15,16 +15,15 @@ log = get_logger(file_name)
 def create_nic_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     nic_page = NICPage(page)
 
+    log.info("Network ACL 페이지로 이동")
     nic_page.open_project()
     nic_page.go_console_menu(S.NIC_MENU)
 
     log.info("[TC-00] VPC 생성 시작")
-    nic_page.open_create_modal(C.NIC_CREATE)
     nic_name = nic_page.create_nic(select_network=True)
     log.info("[TC-00] NIC 생성 완료 | NIC 이름=%s", nic_name)
 
-    if sc is not None:
-        sc.snap(page, label=nic_name)
+    sc.snap(page, label="create_nic")
 
     return nic_name
 

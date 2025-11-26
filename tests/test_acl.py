@@ -15,16 +15,15 @@ log = get_logger(file_name)
 def create_acl_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     acl_page = ACLPage(page)
 
+    log.info("Network ACL 페이지로 이동")
     acl_page.open_project()
     acl_page.go_console_menu(S.NACL_MENU)
     
     log.info("[TC-00] Network ACL 생성 시작")
-    acl_page.open_create_modal(C.NACL_CREATE)
     acl_name = acl_page.create_acl()
     log.info("[TC-00] Network ACL 생성 완료 | Network ACL 이름=%s", acl_name)
 
-    if sc is not None:
-        sc.snap(page, label=acl_name)
+    sc.snap(page, label="create_acl")
     
     return acl_name
 
@@ -35,16 +34,15 @@ def create_acl_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def update_acl_scenario(page: Page, log, acl_name: str, new_name: str, sc: ScreenshotSession):
     acl_page = ACLPage(page)
 
+    log.info("Network ACL 페이지로 이동")
     acl_page.open_project()
     acl_page.go_console_menu(S.NACL_MENU)
     
     log.info("[TC-00] Network ACL 수정 시작 | Network ACL 이름=%s", acl_name)
-    acl_page.go_link_by_name(name=acl_name)
-    acl_name = acl_page.run_rename_flow(new_name=new_name)
+    acl_page.update_acl(acl_name, new_name)
     log.info("[TC-00] Network ACL 수정 완료 | 변경된 Network ACL 이름=%s", new_name)
 
-    if sc is not None:
-        sc.snap(page, label=acl_name)
+    sc.snap(page, label="update_acl")
 
 # -------------------------
 # Network ACL 삭제 시나리오
@@ -52,17 +50,15 @@ def update_acl_scenario(page: Page, log, acl_name: str, new_name: str, sc: Scree
 def delete_acl_scenario(page: Page, log, acl_name: str, sc: ScreenshotSession):
     acl_page = ACLPage(page)
 
+    log.info("Network ACL 페이지로 이동")
     # acl_page.open_project()
     # acl_page.go_console_menu(S.NACL_MENU)
     
     log.info("[TC-00] Network ACL 삭제 시작 | Network ACL 이름=%s", acl_name)
-    # acl_page.go_link_by_name(name=acl_name)
-    acl_page.open_delete_modal()
-    acl_page.run_delete_flow()
+    acl_page.delete_acl(acl_name)
     log.info("[TC-00] Network ACL 삭제 완료")
 
-    if sc is not None:
-        sc.snap(page, label=acl_name)
+    sc.snap(page, label="delete_acl")
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
@@ -78,6 +74,7 @@ def main():
 
             # Network ACL 삭제
             # delete_acl_scenario(page, log, acl_name, sc)
+
         except Exception:
             sc.snap(page, "error")
             log.exception("Network ACL 시나리오 실행 중 예외 발생")

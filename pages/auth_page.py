@@ -108,7 +108,7 @@ class AuthPage(BasePage):
         ).to_be_visible(timeout=timeout)
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def login_kt(self, url: str, user_id: str, password: str):
+    def login_admin(self, url: str, user_id: str, password: str):
         """
         KT Cloud 계정 로그인 플로우
 

@@ -88,7 +88,7 @@ def login_as_admin(page: Page, log: Optional[object] = None) -> Page:
     auth = AuthPage(page)
 
     log.info("[ADMIN] 로그인 시작")
-    auth.login_kt(url=url, user_id=kt_id, password=kt_pw)
+    auth.login_admin(url=url, user_id=kt_id, password=kt_pw)
     log.info("[ADMIN] 로그인 완료")
 
     # 로그인 이후 페이지 로딩/리다이렉트 안정화를 위한 짧은 대기
