@@ -24,7 +24,7 @@ def create_fip_scenario(page: Page, log, sc: ScreenshotSession):
     fip_page.create_fip()
     log.info("[TC-00] Floating IP 생성 완료")
 
-    sc.snap(page, label="create_fip")
+    sc.snap(page, label="create_fip", delay_sec=1.0)
 
 # -------------------------
 # Floating IP 삭제 시나리오
@@ -37,10 +37,10 @@ def delete_fip_scenario(page: Page, log, fip_name: str, sc: ScreenshotSession):
     fip_page.go_console_menu(S.FIP_MENU)
 
     log.info("[TC-00] Floating IP 삭제 시작")
-    fip_page.delete_fip(name=fip_name)
+    fip_page.delete_fip(fip_name)
     log.info("[TC-00] Floating IP 삭제 완료")
 
-    sc.snap(page, label=f"delete_fip")
+    sc.snap(page, label=f"delete_fip", delay_sec=2.0)
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
@@ -48,13 +48,13 @@ def main():
             # 로그인
             login_as_admin(page, log)
 
-            fip_name = "c3ff0cb9-e936-441f-8157-99c2c5ce5497"
+            fip_name = "727054b1-d513-4b1b-a738-419453589ec8"
 
             # Floating IP 생성
-            # create_fip_scenario(page, log, sc)
+            create_fip_scenario(page, log, sc)
 
             # Floating IP 삭제
-            delete_fip_scenario(page, log, fip_name, sc)
+            # delete_fip_scenario(page, log, fip_name, sc)
         except Exception:
             sc.snap(page, "error")
             log.exception("Floating IP 시나리오 실행 중 예외 발생")
