@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S
+from pages.locators.actions import CreateButtonLocators as C
 
 class UserPage(BasePage):
     # ============================================================
@@ -181,6 +181,7 @@ class UserPage(BasePage):
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_user(self, id: str, name: str, email: str, phone: str, password: str):
         """사용자 생성 플로우"""
+        self.open_create_modal(C.USER_CREATE)
         self.enter_id(id)
         self.enter_name(name)
         self.enter_email(email)
@@ -188,19 +189,27 @@ class UserPage(BasePage):
         self.fill_pw_form(password)
         self.click_button()
 
-    def update_user_info(self, name: str, email: str, phone: str):
+    def update_user_info(self, user_id: str, name: str, email: str, phone: str):
         """사용자 수정 플로우"""
+        self.click_user_row(id=user_id)
         self.click_button(text="수정")
         self.enter_name(name)
         self.enter_email_edit(email)
         self.enter_phone(phone)
         self.click_button()
 
-    def update_user_password(self, password: str):
+    def update_user_password(self, user_id: str, password: str):
+        """사용자 비밀번호 변경 플로우"""
+        self.click_user_row(id=user_id)
         self.click_button(text="비밀번호 변경")
         self.fill_pw_form(password)
         self.click_button()
 
+    def delete_user(self, user_id: str):
+        """사용자 삭제 플로우"""
+        self.click_user_row(id=user_id)
+        self.click_delete_user()
+        self.run_delete_flow()
 
 
     

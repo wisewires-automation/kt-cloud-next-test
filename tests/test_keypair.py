@@ -15,16 +15,15 @@ log = get_logger(file_name)
 def create_kp_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     kp_page = KeypairPage(page)
 
+    log.info("Key pair 페이지로 이동")
     kp_page.open_project()
     kp_page.go_console_menu(S.KP_MENU)
 
     log.info("[TC-00] Key Pair 생성 시작")
-    kp_page.open_create_modal(C.KP_CREATE)
     kp_name = kp_page.create_kp()
     log.info("[TC-00] Key Pair 생성 완료 | Key Pair 이름=%s", kp_name)
 
-    if sc is not None:
-        sc.snap(page, label=kp_name)
+    sc.snap(page, label="create_kp")
 
     return kp_name
 
@@ -34,16 +33,15 @@ def create_kp_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def delete_kp_scenario(page: Page, log, kp_name: str, sc: ScreenshotSession):
     kp_page = KeypairPage(page)
     
+    # log.info("Key pair 페이지로 이동")
     # kp_page.open_project()
     # kp_page.go_console_menu(S.KP_MENU)
 
     log.info("[TC-00] Key Pair 삭제 시작 | Key Pair 이름=%s", kp_name)
     kp_page.delete_kp(kp_name)
-    kp_page.run_delete_flow()
     log.info("[TC-00] Key Pair 삭제 완료")
 
-    if sc is not None:
-        sc.snap(page, label=kp_name)
+    sc.snap(page, label=kp_name)
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
