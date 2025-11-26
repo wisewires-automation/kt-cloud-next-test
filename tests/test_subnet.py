@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.actions import SidebarLocators as S
 from pages.subnet_page import SubnetPage
 
 load_dotenv()
@@ -22,6 +22,7 @@ def create_subnet_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     
     subnet_page = SubnetPage(page)
 
+    log.info("Subnet 페이지로 이동")
     subnet_page.open_project()
     subnet_page.go_console_menu(S.SUBNET_MENU)
     
@@ -30,9 +31,7 @@ def create_subnet_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     subnet_name = subnet_page.create_subnet(cidr=cidr)
     log.info("[TC-00] Subnet 생성 완료 | Subnet 이름=%s", subnet_name)
 
-
-    if sc is not None:
-        sc.snap(page, label=subnet_name)
+    sc.snap(page, label="create_subnet")
     
     return subnet_name
 
@@ -42,16 +41,15 @@ def create_subnet_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def update_subnet_scenario(page: Page, log, subnet_name: str, new_name: str, sc: ScreenshotSession):
     subnet_page = SubnetPage(page)
 
+    # log.info("Subnet 페이지로 이동")
     # subnet_page.open_project()
     # subnet_page.go_console_menu(S.SUBNET_MENU)
     
     log.info("[TC-00] Subnet 수정 시작 | Subnet 이름=%s", subnet_name)
-    subnet_page.go_link_by_name(name=subnet_name)
-    subnet_page.run_rename_flow(new_name=new_name)
+    subnet_page.update_subnet(subnet_name, new_name)
     log.info("[TC-00] Subnet 수정 완료 | 변경된 Subnet 이름=%s", new_name)
 
-    if sc is not None:
-        sc.snap(page, label=subnet_name)
+    sc.snap(page, label="update_subnet")
 
 # -------------------------
 # Subnet 삭제 시나리오
@@ -59,17 +57,15 @@ def update_subnet_scenario(page: Page, log, subnet_name: str, new_name: str, sc:
 def delete_subnet_scenario(page: Page, log, subnet_name: str, sc: ScreenshotSession):
     subnet_page = SubnetPage(page)
     
+    # log.info("Subnet 페이지로 이동")
     # subnet_page.open_project()
     # subnet_page.go_console_menu(S.SUBNET_MENU)
     
     log.info("[TC-00] Subnet 삭제 시작 | Subnet 이름=%s", subnet_name)
-    # subnet_page.go_link_by_name(name=subnet_name)
-    subnet_page.open_delete_modal()
-    subnet_page.run_delete_flow()
+    subnet_page.delete_subnet(subnet_name)
     log.info("[TC-00] Subnet 삭제 완료")
 
-    if sc is not None:
-        sc.snap(page, label=subnet_name)
+    sc.snap(page, label="delete_snap")
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:

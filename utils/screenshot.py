@@ -73,22 +73,26 @@ class ScreenshotSession:
 
         self._zip = zipfile.ZipFile(self.zip_file, "w", zipfile.ZIP_DEFLATED)
 
-    def snap(self, page: Page, label: str = "", save_img: bool = False):
+    def snap(
+            self,
+            page: Page,
+            label: str = "",
+            save_img: bool = False,
+            delay_sec: float | None = None,
+        ):
         """
         현재 페이지 스크린샷을 찍어 zip 파일에 추가.
 
-        - label:
-            * 파일명 앞부분에 붙는 라벨
-            * 공백은 '_'로 치환, 소문자로 변환
-            * 미지정 시 "snap" 사용
-
+        - label: 파일명 앞부분에 붙는 라벨
         - save_img:
             * False(기본): png 바이트를 직접 zip 안에만 저장 (디스크에 png 파일은 남기지 않음)
-            * True       : 먼저 screenshots 디렉토리에 png 파일로 저장 후,
-                           그 파일을 zip에 추가
+            * True       : 먼저 screenshots 디렉토리에 png 파일로 저장 후, 그 파일을 zip에 추가
+        - delay_sec: 스크린샷 전에 잠깐 기다리고 싶을 때 사용 (기본값: None)
         """
-        # 결과 화면 캡쳐를 위해 추가
-        time.sleep(1)
+
+        # 필요할 때만 딜레이
+        if delay_sec:
+            page.wait_for_timeout(int(delay_sec * 1000))
 
         # 파일명용 라벨 정리
         safe_label = label.strip().replace(" ", "_").lower() if label else "snap"

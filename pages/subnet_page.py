@@ -3,7 +3,7 @@
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.locators.common import ButtonLocators as B
 from utils.name_generator import generate_name
 
 class SubnetPage(BasePage):
@@ -84,3 +84,14 @@ class SubnetPage(BasePage):
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
         return subnet_name
+    
+    def update_subnet(self, subnet_name: str, new_name: str):
+        """Subnet 수정 플로우"""
+        self.go_link_by_name(name=subnet_name)
+        self.run_rename_flow(new_name=new_name)
+    
+    def delete_subnet(self, subnet_name: str):
+        """Subnet 삭제 플로우"""
+        self.go_link_by_name(name=subnet_name)
+        self.open_delete_modal()
+        self.run_delete_flow()

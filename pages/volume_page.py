@@ -2,8 +2,8 @@
 
 from playwright.sync_api import Page, expect, Locator
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.locators.actions import CreateButtonLocators as C
+from pages.locators.common import ButtonLocators as B
 from utils.name_generator import generate_name
 
 class VolumePage(BasePage):
@@ -146,6 +146,8 @@ class VolumePage(BasePage):
         """Volume 생성 플로우"""
         volume_name = generate_name(prefix="QA-VOLUME-")
 
+        self.open_create_modal(C.VOLUME_CREATE)
+
         self.fill_form(name=volume_name, desc=desc)
         self.select_option_by_index() # Volume 유형
 
@@ -189,3 +191,4 @@ class VolumePage(BasePage):
         """Volume 삭제 플로우"""
         self.open_row_menu(volume_name)
         self.click_in_menu(menu_name="삭제")
+        self.run_delete_flow()

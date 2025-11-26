@@ -3,6 +3,7 @@
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from utils.name_generator import generate_name
+from pages.locators.actions import CreateButtonLocators as C
 
 class VPCPage(BasePage):
     # ============================================================
@@ -41,8 +42,20 @@ class VPCPage(BasePage):
     def create_vpc(self, cidr: str = "10.0.0.0/8", timeout: int = 10000) -> str:
         """VPC 생성 플로우"""
         vpc_name = generate_name(prefix="QA-VPC-")
+        self.open_create_modal(C.VPC_CREATE)
         self.fill_form(name=vpc_name, cidr=cidr)
         self.click_button()
         expect(self.page.get_by_text(self.CREATE_SUCCESS_TEXT)).to_be_visible(timeout=timeout)
 
         return vpc_name
+    
+    def update_vpc(self, vpc_name: str, new_name: str):
+        """VPC 수정 플로우"""
+        self.go_link_by_name(name=vpc_name)
+        self.run_rename_flow(new_name=new_name)
+    
+    def delete_vpc(self, vpc_name: str):
+        """VPCL 삭제 플로우"""
+        self.go_link_by_name(name=vpc_name)
+        self.open_delete_modal()
+        self.run_delete_flow()

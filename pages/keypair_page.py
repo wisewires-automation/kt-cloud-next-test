@@ -3,6 +3,7 @@
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
+from pages.locators.actions import CreateButtonLocators as C
 from utils.name_generator import generate_name
 
 class KeypairPage(BasePage):
@@ -73,6 +74,7 @@ class KeypairPage(BasePage):
         """Key Pair 생성 플로우"""
         kp_name = generate_name("QA-KEY-", letters_only=True)
 
+        self.open_create_modal(C.KP_CREATE)
         self.name_input.fill(kp_name)
         self.click_confirm_button()
         self.click_close_button()
@@ -83,3 +85,4 @@ class KeypairPage(BasePage):
         """Key Pair 삭제 플로우"""
         self.open_row_menu(kp_name)
         self.click_delete_in_menu()
+        self.run_delete_flow()

@@ -3,6 +3,7 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
+from pages.locators.actions import CreateButtonLocators as C
 from utils.name_generator import generate_name
 
 class IGPage(BasePage):
@@ -26,14 +27,28 @@ class IGPage(BasePage):
     # ============================================================
     # ACTIONS
     # ============================================================
-    def fill_form(self, name: str):
-        """ Internet Gateway 생성 모달에 이름 값 입력"""
+    def enter_name(self, name: str):
+        """Internet Gateway 이름 입력"""
         self.name_input.fill(name)
     
     # ===== 테스트 시나리오 단위 ACTIONS =====
     def create_ig(self) -> str:
         """Internet Gateway 생성 플로우"""
         ig_name = generate_name(prefix="QA-IG-")
-        self.fill_form(name=ig_name)
+
+        self.open_create_modal(C.IG_CREATE)
+        self.enter_name(name=ig_name)
         self.click_button(text=B.CREATE_BUTTON_NAME)
+
         return ig_name
+    
+    def update_ig_name(self, ig_name: str, new_name: str):
+        """Internet Gateway 수정 플로우"""
+        self.go_link_by_name(name=ig_name)
+        self.run_rename_flow(new_name=new_name)
+    
+    def delete_ig(self, ig_name: str):
+        """Internet Gateway 삭제 플로우"""
+        self.go_link_by_name(name=ig_name)
+        self.open_delete_modal()
+        self.run_delete_flow()
