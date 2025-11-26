@@ -3,7 +3,7 @@ from pathlib import Path
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.locators.actions import SidebarLocators as S
 from pages.sg_page import SGPage
 
 file_name = Path(__file__).stem
@@ -15,16 +15,15 @@ log = get_logger(file_name)
 def create_sg_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     sg_page = SGPage(page)
 
+    log.info("Security Group 페이지로 이동")
     sg_page.open_project()
     sg_page.go_console_menu(S.SG_MENU)
     
     log.info("[TC-00] Security Group 생성 시작")
-    sg_page.open_create_modal(C.SG_CREATE)
     sg_name = sg_page.create_sg()
     log.info("[TC-00] Security Group 생성 완료 | Security Group 이름=%s", sg_name)
 
-    if sc is not None:
-        sc.snap(page, label=sg_name)
+    sc.snap(page, label="create_sg")
     
     return sg_name
 

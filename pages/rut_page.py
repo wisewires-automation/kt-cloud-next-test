@@ -2,8 +2,8 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.locators.actions import CreateButtonLocators as C
+from pages.locators.common import ButtonLocators as B
 from utils.name_generator import generate_name
 
 class RUTPage(BasePage):
@@ -51,10 +51,18 @@ class RUTPage(BasePage):
     # ============================================================
     # ACTIONS
     # ============================================================
-    def fill_form(self, name: str, desc: str):
-        """Route Table 생성 모달에 이름/설명 입력"""
+    def enter_name(self, name:str):
+        """Route Table 이름 입력"""
         self.name_input.fill(name)
+    
+    def enter_desc(self, desc:str):
+        """Route Table 설명 입력"""
         self.desc_input.fill(desc)
+
+    def fill_form(self, name: str, desc: str):
+        """Route Table 폼 입력"""
+        self.enter_name(name)
+        self.enter_desc(desc)
 
     def select_vpc_by_name(self, vpc_name: str, timeout: int = 10000):
         """VPC 이름으로 VPC 선택"""
@@ -70,9 +78,11 @@ class RUTPage(BasePage):
         self.vpc_option.nth(0).click()
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def create_rut(self, desc: str = "", vpc_name: str = "") -> str:
+    def create_rut(self, desc: str, vpc_name: str) -> str:
         """Route Table 생성 플로우"""
         rt_name = generate_name(prefix="QA-RUT-")
+        
+        self.open_create_modal(C.RUT_CREATE)
 
         # vpc 명이 있을 경우 이름으로 선택 없을 경우 제일 첫번째 옵션 선택
         if vpc_name:

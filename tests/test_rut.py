@@ -16,16 +16,15 @@ log = get_logger(file_name)
 def create_rut_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     rut_page = RUTPage(page)
 
+    log.info("Route Table 페이지로 이동")
     rut_page.open_project()
     rut_page.go_console_menu(S.RUT_MENU)
     
     log.info("[TC-00] Route Table 생성 시작")
-    rut_page.open_create_modal(C.RUT_CREATE)
     rut_name = rut_page.create_rut(desc="", vpc_name="")
     log.info("[TC-00] Route Table 생성 완료 | Route Table 이름=%s", rut_name)
     
-    if sc is not None:
-        sc.snap(page, label=rut_name)
+    sc.snap(page, label=rut_name)
 
     return rut_name
 

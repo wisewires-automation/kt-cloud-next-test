@@ -3,6 +3,7 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 from pages.locators.common import ButtonLocators as B
+from pages.locators.actions import CreateButtonLocators as C
 from utils.name_generator import generate_name
 
 class ACLPage(BasePage):
@@ -44,7 +45,19 @@ class ACLPage(BasePage):
         """Network ACL 생성 플로우"""
         acl_name = generate_name(prefix="QA-ACL-")
 
+        self.open_create_modal(C.NACL_CREATE)
         self.fill_form(name=acl_name)
         self.click_button(text=B.CREATE_BUTTON_NAME)
         
         return acl_name
+    
+    def update_acl(self, acl_name: str, new_name: str):
+        """Network ACL 수정 플로우"""
+        self.go_link_by_name(name=acl_name)
+        self.run_rename_flow(new_name=new_name)
+    
+    def delete_acl(self, acl_name: str):
+        """Network ACL 삭제 플로우"""
+        self.go_link_by_name(name=acl_name)
+        self.open_delete_modal()
+        self.run_delete_flow()
