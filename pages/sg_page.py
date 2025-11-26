@@ -41,8 +41,12 @@ class SGPage(BasePage):
         """Security Group 설명 입력"""
         self.desc_input.fill(desc)
 
+    def fill_form(self, name: str, desc: str):
+        self.enter_name(name)
+        self.enter_desc(desc)
+
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def create_sg(self) -> str:
+    def create_sg(self, desc: str = "") -> str:
         """Security Group 생성 플로우"""
         sg_name = generate_name(prefix="QA-SG-")
 

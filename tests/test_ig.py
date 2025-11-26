@@ -28,49 +28,33 @@ def create_ig_scenario(page: Page, log, sc: ScreenshotSession) -> str:
     return ig_name
 
 # -------------------------
-# Internet Gateway 수정 시나리오
-# -------------------------
-def update_ig_scenario(page: Page, log, ig_name: str, new_name: str, sc: ScreenshotSession):
-    ig_page = IGPage(page)
-
-    log.info("Internet Gateway 페이지로 이동")
-    ig_page.open_project()
-    ig_page.go_console_menu(S.IG_MENU)
-    
-    log.info("[TC-00] Internet Gateway 수정 시작 | Internet Gateway 이름=%s", ig_name)
-    ig_page.update_ig_name(ig_name, new_name)
-    log.info("[TC-00] Internet Gateway 수정 완료 | 변경된 Internet Gateway 이름=%s", new_name)
-
-    sc.snap(page, label="update_ig")
-
-# -------------------------
 # Internet Gateway 삭제 시나리오
 # -------------------------
 def delete_ig_scenario(page: Page, log, ig_name: str, sc: ScreenshotSession):
     ig_page = IGPage(page)
 
-    # log.info("Internet Gateway 페이지로 이동")
-    # ig_page.open_project()    
-    # ig_page.go_console_menu(S.IG_MENU)
+    log.info("Internet Gateway 페이지로 이동")
+    ig_page.open_project()    
+    ig_page.go_console_menu(S.IG_MENU)
     
     log.info("[TC-00] Internet Gateway 삭제 시작 | Internet Gateway 이름=%s", ig_name)
     ig_page.delete_ig(ig_name)
     log.info("[TC-00] Internet Gateway 삭제 완료")
 
-    sc.snap(page, label="delete_ig")
+    sc.snap(page, label="delete_ig", delay_sec=1.0)
 
 def main():
     with create_page(headless=False) as page, ScreenshotSession(__file__, zip_name=file_name) as sc:
         try:
             login_as_admin(page, log)
-            # Internet Gateway 생성
-            ig_name = create_ig_scenario(page, log, sc)
 
-            # Internet Gateway 수정
-            update_ig_scenario(page, log, ig_name, new_name=f"{ig_name}-003", sc=sc)
+            ig_name = "QA-IG-003"
+
+            # Internet Gateway 생성
+            # ig_name = create_ig_scenario(page, log, sc)
             
             # Internet Gateway 삭제
-            # delete_ig_scenario(page, log, ig_name, sc)
+            delete_ig_scenario(page, log, ig_name, sc)
         except Exception:
             sc.snap(page, "error")
             log.exception("Internet Gateway 시나리오 실행 중 예외 발생")
