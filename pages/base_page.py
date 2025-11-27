@@ -101,8 +101,9 @@ class BasePage:
         self._safe_click(admin_button)
 
     def go_console_menu(self, label: str):
-        """사이드바 메뉴 이동(콘솔)"""
-        menu_item = self.page.get_by_role("button", name=label, exact=True)
+        """사이드바 메뉴 이동(콘솔 - 서브 메뉴)"""
+        sidebar = self.page.locator('[data-sidebar="menu-sub"]')
+        menu_item = sidebar.get_by_role("link", name=label, exact=True).first
         self._safe_click(menu_item)
 
     def go_admin_menu(self, label: str):
@@ -125,8 +126,8 @@ class BasePage:
         btn = self.delete_open_button
         self._safe_click(btn, timeout=timeout)
 
-    def open_project(self, project_name: str = "QA-PROJECT-001", timeout: int = 10_000):
-        """프로젝트 리스트에서 특정 프로젝트 클릭하여 진입"""
+    def open_project(self, project_name: str = "QA-PROJECT-001", timeout: int = 10000):
+        """프로젝트 리스트에서 특정 프로젝트 진입"""
         link = self.page.get_by_role("link", name=project_name)
         self._safe_click(link, timeout=timeout)
 

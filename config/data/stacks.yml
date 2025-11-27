@@ -1,0 +1,11 @@
+TEST_STACK_FOR_VPC:
+  description: "VPC 생성/수정/삭제 테스트용 세트"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_VPC_AUTO"
+  subnet_key: ""
+
+TEST_STACK_FOR_SUBNET:
+  description: "서브넷 생성/수정/삭제 테스트용 세트"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_VPC_BASE"
+  subnet_key: "QA_SUBNET_AUTO"

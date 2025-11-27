@@ -33,9 +33,9 @@ def create_nacl_scenario(page: Page, log, sc: ScreenshotSession) -> str:
 def update_nacl_scenario(page: Page, log, nacl_name: str, new_name: str, sc: ScreenshotSession):
     acl_page = ACLPage(page)
 
-    log.info("Network ACL 페이지로 이동")
-    acl_page.open_project()
-    acl_page.go_console_menu(S.NACL_MENU)
+    # log.info("Network ACL 페이지로 이동")
+    # acl_page.open_project()
+    # acl_page.go_console_menu(S.NACL_MENU)
     
     log.info("[TC-00] Network ACL 수정 시작 | Network ACL 이름=%s", nacl_name)
     acl_page.update_nacl(nacl_name, new_name)
@@ -49,9 +49,9 @@ def update_nacl_scenario(page: Page, log, nacl_name: str, new_name: str, sc: Scr
 def delete_nacl_scenario(page: Page, log, nacl_name: str, sc: ScreenshotSession):
     acl_page = ACLPage(page)
 
-    log.info("Network ACL 페이지로 이동")
-    acl_page.open_project()
-    acl_page.go_console_menu(S.NACL_MENU)
+    # log.info("Network ACL 페이지로 이동")
+    # acl_page.open_project()
+    # acl_page.go_console_menu(S.NACL_MENU)
     
     log.info("[TC-00] Network ACL 삭제 시작 | Network ACL 이름=%s", nacl_name)
     acl_page.delete_nacl(nacl_name)
@@ -65,13 +65,15 @@ def main():
             # 로그인
             login_as_admin(page, log)
 
-            nacl_name = "QA-ACL"
+            # nacl_name = "QA-ACL"
 
             # Network ACL 생성
-            # nacl_name = create_nacl_scenario(page, log, sc)
+            nacl_name = create_nacl_scenario(page, log, sc)
+
+            new_name = f"{nacl_name}-EDITED"
 
             # Network ACL 수정
-            # update_nacl_scenario(page, log, nacl_name, new_name=f"{nacl_name}-003", sc=sc)
+            update_nacl_scenario(page, log, nacl_name, new_name=new_name, sc=sc)
 
             # Network ACL 삭제
             delete_nacl_scenario(page, log, nacl_name, sc)
