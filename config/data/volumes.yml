@@ -1,0 +1,6 @@
+QA_VOL_AUTO_01:
+  name: "QA-VOL-AUTO-01"
+  description: "자동화 테스트 1번 볼륨"
+  type_index: 0     # 0~2 중 하나
+  size: "128"      # 8의 배수
+  zone_index: 0     # 가용영역 0번째 인덱스

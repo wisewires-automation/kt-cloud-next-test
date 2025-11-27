@@ -2,7 +2,6 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from utils.name_generator import generate_name
 from pages.locators.actions import CreateButtonLocators as C
 
 class VPCPage(BasePage):
@@ -33,15 +32,22 @@ class VPCPage(BasePage):
     # ============================================================
     # ACTIONS
     # ============================================================
-    def fill_form(self, name: str, cidr: str):
-        """VPC 생성 모달에 VPC 이름/CIDR 입력"""
+    def enter_name(self, name: str):
+        """VPC 이름 입력"""
         self.name_input.fill(name)
+
+    def enter_cidr(self, cidr: str):
+        """VPC CIDR 입력"""
         self.cidr_input.fill(cidr)
 
+    def fill_form(self, name: str, cidr: str):
+        """VPC 모달 폼 입력"""
+        self.enter_name(name)
+        self.enter_cidr(cidr)
+
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def create_vpc(self, cidr: str = "10.0.0.0/8", timeout: int = 10000) -> str:
+    def create_vpc(self, vpc_name: str, cidr: str, timeout: int = 10000) -> str:
         """VPC 생성 플로우"""
-        vpc_name = generate_name(prefix="QA-VPC-")
         self.open_create_modal(C.VPC_CREATE)
         self.fill_form(name=vpc_name, cidr=cidr)
         self.click_button()
@@ -56,6 +62,6 @@ class VPCPage(BasePage):
     
     def delete_vpc(self, vpc_name: str):
         """VPCL 삭제 플로우"""
-        self.go_link_by_name(name=vpc_name)
+        # self.go_link_by_name(name=vpc_name)
         self.open_delete_modal()
         self.run_delete_flow()

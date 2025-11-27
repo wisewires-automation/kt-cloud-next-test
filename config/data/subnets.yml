@@ -1,0 +1,13 @@
+QA_SUBNET_BASE:
+  provision: "manual"
+  name: "QA-SUBNET-BASE"
+  cidr: "10.0.0.0/8"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_VPC_BASE"
+
+QA_SUBNET_AUTO:
+  provision: "auto"
+  name: "QA-SUBNET-AUTO"
+  cidr: "10.1.1.0/24"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_VPC_BASE"

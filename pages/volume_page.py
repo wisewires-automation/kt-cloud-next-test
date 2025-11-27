@@ -3,7 +3,6 @@
 from playwright.sync_api import Page, expect, Locator
 from pages.base_page import BasePage
 from pages.locators.actions import CreateButtonLocators as C
-from pages.locators.common import ButtonLocators as B
 from utils.name_generator import generate_name
 
 class VolumePage(BasePage):
@@ -142,21 +141,19 @@ class VolumePage(BasePage):
         return center_row
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def create_volume(self, desc: str, size: str) -> str:
+    def create_volume(self, name: str, desc: str, type: int, size: str, zone: int) -> str:
         """Volume 생성 플로우"""
-        volume_name = generate_name(prefix="QA-VOLUME-")
-
         self.open_create_modal(C.VOLUME_CREATE)
 
-        self.fill_form(name=volume_name, desc=desc)
-        self.select_option_by_index() # Volume 유형
+        self.fill_form(name, desc)
+        self.select_option_by_index(index=type) # Volume 유형
 
         self.size_input.fill(size)
-        self.select_option_by_index() # 가용 영역 유형
+        self.select_option_by_index(index=zone) # 가용 영역 유형
         
         self.click_button()
 
-        return volume_name
+        return name
     
     def update_volume_size(self, volume_name:str, size: str) -> str:
         """Volume 용량 확장 플로우"""

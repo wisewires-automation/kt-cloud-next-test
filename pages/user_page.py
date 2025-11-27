@@ -150,7 +150,7 @@ class UserPage(BasePage):
 
     def click_user_row(self, id: str, timeout: int = 10000):
         """id와 일치하는 row 클릭"""
-        user_row = self.row.filter(has=self.page.locator(self.login_id_cell, has_text=id))
+        user_row = self.row.filter(has=self.page.locator(self.login_id_cell, has_text=id)).first
         expect(user_row).to_be_visible(timeout=timeout)
         user_row.click()
 

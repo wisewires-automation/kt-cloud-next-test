@@ -72,6 +72,6 @@ class ACLPage(BasePage):
     
     def delete_nacl(self, nacl_name: str):
         """Network ACL 삭제 플로우"""
-        self.go_link_by_name(name=nacl_name)
+        # self.go_link_by_name(name=nacl_name)
         self.open_delete_modal()
         self.run_delete_flow()
