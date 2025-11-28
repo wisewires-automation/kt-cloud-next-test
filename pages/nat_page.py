@@ -2,8 +2,8 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.common import ToastLocators as T, ButtonLocators as B
 from utils.name_generator import generate_name
 
 class NATPage(BasePage):

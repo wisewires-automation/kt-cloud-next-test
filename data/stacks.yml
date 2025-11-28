@@ -9,3 +9,10 @@ TEST_STACK_FOR_SUBNET:
   project_key: "QA_PROJECT_BASE"
   vpc_key: "QA_VPC_BASE"
   subnet_key: "QA_SUBNET_AUTO"
+
+TEST_STACK_FOR_SG:
+  description: "Security Group 생성/수정/삭제 테스트용 세트"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_SG_AUTO"
+  subnet_key: ""
+

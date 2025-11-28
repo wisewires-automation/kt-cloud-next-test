@@ -1,7 +1,7 @@
 import time
 from playwright.sync_api import Page, expect
-from pages.locators.common import ButtonLocators as B
-from pages.locators.actions import SidebarLocators as S
+from pages.common import ButtonLocators as B
+from pages.actions import SidebarLocators as S
 
 class BasePage:
     def __init__(self, page: Page):

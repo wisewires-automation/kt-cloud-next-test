@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S
+from pages.actions import SidebarLocators as S
 from pages.snap_page import SnapPage
 
 load_dotenv()
