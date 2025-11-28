@@ -14,8 +14,8 @@ class StackConfig:
     project_key: str
     vpc_key: str
     subnet_key: str
-
-
+    rut_key: str
+    ig_key: str
 class StackRepository:
     def __init__(self, path: Path = CONFIG_PATH):
         self._path = path
@@ -38,7 +38,10 @@ class StackRepository:
                 description=value.get("description", ""),
                 project_key=value["project_key"],
                 vpc_key=value["vpc_key"],
-                subnet_key=value["subnet_key"]
+                subnet_key=value["subnet_key"],
+                #추가된 부분
+                rut_key = value.get("rut_key", ""),
+                ig_key = value.get("ig_key", "")
             )
 
     def get(self, key: str) -> StackConfig:
