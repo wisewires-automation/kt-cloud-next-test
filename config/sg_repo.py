@@ -3,21 +3,21 @@ from pathlib import Path
 from typing import Dict, Any
 import yaml
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "projects.yml"
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "security_groups.yml"
 
 
 @dataclass
-class ProjectConfig:
+class SGConfig:
     key: str
     name: str
     description: str
-    provision: str  # "manual" or "auto"
+    provision: str
 
 
-class ProjectRepository:
+class SGRepository:
     def __init__(self, path: Path = CONFIG_PATH):
         self._path = path
-        self._projects: Dict[str, ProjectConfig] = {}
+        self._projects: Dict[str, SGConfig] = {}
         self._load()
 
     def _load(self) -> None:
@@ -29,7 +29,7 @@ class ProjectRepository:
             raw: Dict[str, Any] = yaml.safe_load(f) or {}
 
         self._projects = {
-            key: ProjectConfig(
+            key: SGConfig(
                 key=key,
                 name=value["name"],
                 description=value.get("description", ""),
@@ -38,14 +38,14 @@ class ProjectRepository:
             for key, value in raw.items()
         }
 
-    def get(self, key: str) -> ProjectConfig:
+    def get(self, key: str) -> SGConfig:
         try:
             return self._projects[key]
         except KeyError:
-            raise KeyError(f"[ProjectRepository] Unknown project key: {key!r}")
+            raise KeyError(f"[SGRepository] Unknown project key: {key!r}")
 
     def all(self):
         return list(self._projects.values())
 
 
-project_repo = ProjectRepository()
+sg_repo = SGRepository()

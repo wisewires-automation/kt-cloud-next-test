@@ -3,7 +3,7 @@ from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_iam
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.volume_page import VolumePage
 
 from config.project_repo import project_repo

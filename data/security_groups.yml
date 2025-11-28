@@ -1,0 +1,12 @@
+QA_SG_BASE:
+  note: "테스트 공통으로 사용하는 기본 Security Group"
+  provision: "manual"
+  name: "QA-SG-BASE"
+  description: "Security Group 자동화 테스트입니다"
+  project_key: "QA_PROJECT_BASE"
+
+QA_SG_AUTO:
+  provision: "auto"
+  name: "QA-SG-AUTO"
+  description: "Security Group 자동화 테스트입니다"
+  project_key: "QA_PROJECT_BASE"

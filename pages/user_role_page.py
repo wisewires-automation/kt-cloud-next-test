@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.common import ButtonLocators as B
+from pages.common import ButtonLocators as B
 
 class UserRolePage(BasePage):
     # ============================================================

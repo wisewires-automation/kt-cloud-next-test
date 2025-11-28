@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.common import ToastLocators as T, ButtonLocators as B
+from pages.common import ToastLocators as T, ButtonLocators as B
 
 class AuthPage(BasePage):
     # ============================================================

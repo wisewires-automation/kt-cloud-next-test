@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Any
 import yaml
 
-CONFIG_PATH = Path(__file__).resolve().parent / "data" / "subnets.yml"
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "subnets.yml"
 
 
 @dataclass
