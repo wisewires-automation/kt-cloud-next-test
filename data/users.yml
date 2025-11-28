@@ -1,0 +1,62 @@
+TEMP:
+  id: "test01"
+  name: "임시계정"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+PROJECT_OWNER:
+  id: "projectowner01"
+  name: "프로젝트오너"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+PROJECT_MANAGER:
+  id: "projectmgr01"
+  name: "프로젝트매니저"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+BLOCK_STORAGE_VIEWER:
+  id: "bsviewer01"
+  name: "블록뷰어"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+BLOCK_STORAGE_MANAGER:
+  id: "bsmgr01"
+  name: "블록매니저"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+SERVER_VIEWER:
+  id: "serverviewer01"
+  name: "서버뷰어"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+SERVER_MANAGER:
+  id: "servermgr01"
+  name: "서버매니저"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+VPC_MANAGER:
+  id: "vpcmgr01"
+  name: "VPC매니저"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"
+
+VPC_VIEWER:
+  id: "vpcviwer01"
+  name: "VPC뷰어"
+  email: "testuser@wisewires.com"
+  phone: "01012345678"
+  password: "!1Wjdtmddus"

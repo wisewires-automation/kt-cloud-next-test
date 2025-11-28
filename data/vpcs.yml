@@ -1,0 +1,12 @@
+QA_VPC_BASE:
+  note: "테스트 공통으로 사용하는 기본 VPC"
+  provision: "manual"
+  name: "QA-VPC-BASE"
+  cidr: "10.0.0.0/8"
+  project_key: "QA_PROJECT_BASE"
+
+QA_VPC_AUTO:
+  provision: "auto"
+  name: "QA-VPC-AUTO"
+  cidr: "10.0.0.0/8"
+  project_key: "QA_PROJECT_BASE"

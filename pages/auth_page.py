@@ -92,9 +92,9 @@ class AuthPage(BasePage):
         """로그인 아이디 입력"""
         self.username_input.fill(user_id)
 
-    def enter_password(self, password: str):
+    def enter_password(self, user_pw: str):
         """로그인 비밀번호 입력"""
-        self.password_input.fill(password)
+        self.password_input.fill(user_pw)
 
     def click_login(self):
         """로그인 버튼 클릭"""
@@ -108,7 +108,7 @@ class AuthPage(BasePage):
         ).to_be_visible(timeout=timeout)
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def login_admin(self, url: str, user_id: str, password: str):
+    def login_admin(self, url: str, user_id: str, user_pw: str):
         """
         KT Cloud 계정 로그인 플로우
 
@@ -119,11 +119,11 @@ class AuthPage(BasePage):
         """
         self.goto(url)
         self.enter_id(user_id)
-        self.enter_password(password)
+        self.enter_password(user_pw)
         self.click_login()
         self.wait_login_success()
 
-    def login_iam(self, url: str, group_id: str, user_id: str, password: str):
+    def login_iam(self, url: str, group_id: str, user_id: str, user_pw: str):
         """
         IAM 계정 로그인 플로우
 
@@ -137,7 +137,7 @@ class AuthPage(BasePage):
         self.click_tab(self.IAM_TAB_NAME)
         self.enter_group_id(group_id)
         self.enter_id(user_id)
-        self.enter_password(password)
+        self.enter_password(user_pw)
         self.click_login()
         self.wait_login_success()
 

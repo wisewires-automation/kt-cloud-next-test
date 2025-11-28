@@ -2,9 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
-from pages.locators.common import ButtonLocators as B
-from utils.name_generator import generate_name
+from pages.locators.actions import CreateButtonLocators as C
 
 class SubnetPage(BasePage):
     # ============================================================
@@ -69,9 +67,9 @@ class SubnetPage(BasePage):
         self.cidr_input.fill(cidr)
 
     # ===== 테스트 시나리오 단위 ACTIONS =====
-    def create_subnet(self, cidr: str = "10.0.0.0/8", vpc_name: str = "QA-VPC-003", timeout: int = 10000) -> str:
+    def create_subnet(self, vpc_name: str, subnet_name: str, cidr: str, timeout: int = 10000) -> str:
         """Subnet 생성 플로우"""
-        subnet_name = generate_name(prefix="QA-SUB-")
+        self.open_create_modal(C.SUBNET_CREATE)
 
         # VPC명이 없으면 첫번째 옵션 선택
         if vpc_name:
@@ -92,6 +90,6 @@ class SubnetPage(BasePage):
     
     def delete_subnet(self, subnet_name: str):
         """Subnet 삭제 플로우"""
-        self.go_link_by_name(name=subnet_name)
+        # self.go_link_by_name(name=subnet_name)
         self.open_delete_modal()
         self.run_delete_flow()

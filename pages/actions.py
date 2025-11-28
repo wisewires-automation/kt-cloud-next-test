@@ -15,8 +15,8 @@ class SidebarLocators:
     NACL_MENU = "Network ACL"
     SG_MENU = "Security Groups"
     LOAD_BALANCER = "Load Balancer"
-    VOLUME_MENU = "Volume"
-    SNAP_MENU = "Snapshot"
+    VOLUME_MENU = "Disk"
+    SNAP_MENU = "Disk Snapshot"
 
     # 관리자 페이지
     MANAGE_PROJECT_MENU = "프로젝트 관리"
