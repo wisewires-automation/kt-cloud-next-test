@@ -1,5 +1,6 @@
 """ Security Group POM """
 
+import time
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 from pages.actions import CreateButtonLocators as C
@@ -11,7 +12,10 @@ class SGPage(BasePage):
     # ============================================================
     NAME_INPUT = 'input[name="name"]'        # Security Group 이름 입력 필드
     DESC_INPUT = 'input[name="description"]' # Security Group 설명 입력 필드
-    SELECT_SG_PLACEHOLDER = "보안 그룹 선택"   # 보안 그룹 선택박스 placeholder
+    
+    IP_PROTOCAL_LABEL = "IP 프로토콜"
+    PORT_RANGE_LABEL = "포트 범위"
+    REMOTE_LABEL = "원격"
 
     # IP 프로토콜
     ALL_PROTOCOL = "All 프로토콜"    
@@ -77,9 +81,9 @@ class SGPage(BasePage):
         return self.page.get_by_role("combobox")
     
     @property
-    def ip_protocol_label(self):
-        """IP 프로토콜 셀렉트 박스 옵션의 라벨 locator"""
-        return self.page.locator("label.s-select-radio-label")
+    def remote_group(self):
+        """보안 그룹 선택 박스 locator"""
+        return self.page.locator("#remote-group")
     
     # ============================================================
     # ACTIONS
@@ -109,6 +113,24 @@ class SGPage(BasePage):
     def enter_max_port(self, port: int):
         """범위 포트 - 끝 값 입력"""
         self.port_max_input.fill(str(port))
+
+    def get_selectbox_by_label(self, label_text: str):
+        """
+        <label>라벨 텍스트</label> 바로 아래에 있는
+        button[role="combobox"][data-slot="select-trigger"]를 찾아서 반환.
+        """
+        container = self.page.locator("div").filter(
+            has=self.page.locator("label", has_text=label_text)
+        ).first
+
+        return container.locator('button[role="combobox"][data-slot="select-trigger"]').first
+
+    def open_selectbox_by_label(self, label_text: str, timeout: int = 10000) -> None:
+        """라벨 기준으로 셀렉트박스를 열기"""
+        print('label_text ::', label_text)
+        selectbox = self.get_selectbox_by_label(label_text)
+        print('selectbox ::', selectbox)
+        selectbox.click()
 
     def open_selectbox_by_name(self, name: str):
         selectbox = self.select_box.filter(has_text=name).first
@@ -140,30 +162,77 @@ class SGPage(BasePage):
         self.open_delete_modal()
         self.run_delete_flow()
 
-    def set_all_tcp_cidr(self, ip: str):
-        """All TCP > CIDR > ip input"""
-        self.open_selectbox_by_name(name=self.CUSTOM_TCP)
+    def add_all_protocol(self, ip):
+        """All 프로토콜 + CIDR"""
+        self.open_selectbox_by_name(self.CUSTOM_TCP)
         self.select_option_by_name(name=self.ALL_PROTOCOL)
+
         self.enter_ip(ip)
 
-    def set_all_tcp_group(self, sg_name: str):
-        """All TCP > 보안그룹 > 보안 그룹 선택"""
-        self.open_selectbox_by_name(name=self.CUSTOM_TCP)
-        self.select_option_by_name(name=self.ALL_PROTOCOL)
+        self.click_button(text=self.ADD_BUTTON_TEXT)
+
+    def add_all_tcp(self):
+        """All TCP + 보안그룹"""
+        self.open_selectbox_by_name(self.ALL_PROTOCOL)
+        self.select_option_by_name(name=self.ALL_TCP)
 
         self.open_selectbox_by_name(name=self.CIDR)
         self.select_option_by_name(name=self.SECURITY_GROUP)
 
-        self.open_selectbox_by_name(name=self.SELECT_SG_PLACEHOLDER)
-        self.select_option_by_name(name=sg_name)
+        self._safe_click(self.remote_group)
+        self.select_option_by_name("default")
 
-
-    def create_sg_inbound(self, sg_name: str, ip: str, port: int):
-        """Security Group Inbound 생성 플로우"""
-        self.go_link_by_name(name=sg_name)
-        self.open_create_modal(C.INBOUND_CREATE)
-        # self.set_all_tcp_cidr(ip)
-        self.set_all_tcp_group(sg_name = "qa-sg-test")
         self.click_button(text=self.ADD_BUTTON_TEXT)
+
+    def add_custom_tcp(self, port, ip):
+        """사용자정의 TCP + 단일포트 + CIDR"""
+        self.open_selectbox_by_name(self.ALL_TCP)
+        self.select_option_by_name(name=self.CUSTOM_TCP)
+
+        self.enter_min_port(port)
+
+        self.open_selectbox_by_name(name=self.SECURITY_GROUP)
+        self.select_option_by_name(name=self.CIDR)
+
+        self.enter_ip(ip)
+
+        self.click_button(text=self.ADD_BUTTON_TEXT)
+
+    def add_custom_udp(self, min_port, max_port):
+        """사용자정의 UDP + 범위포트 + 보안 그룹"""
+        self.open_selectbox_by_name(self.CUSTOM_TCP)
+        self.select_option_by_name(name=self.CUSTOM_UDP)
+
+        self.open_selectbox_by_name(self.PORT_UNIT)
+        self.select_option_by_name(self.PORT_RANGE)
+        self.enter_min_port(min_port)
+        self.enter_max_port(max_port)
+
+        self.open_selectbox_by_name(name=self.CIDR)
+        self.select_option_by_name(name=self.SECURITY_GROUP)
+
+        self._safe_click(self.remote_group)
+        self.select_option_by_name("default")
+
+        self.click_button(text=self.ADD_BUTTON_TEXT)
+
+    def create_inbound_rules(self, ip: str, port: int):
+        """
+        Security Group Inbound 생성 플로우
+        
+        All 프로토콜 + CIDR
+        All TCP + 보안 그룹
+        Custom TCP + 단일포트 + CIDR
+        Custom UDP + 범위포트 + 보안 그룹
+        """
+
+        # self.go_link_by_name(name=sg_name)
+        self.open_create_modal(C.INBOUND_CREATE)
+
+        self.add_all_protocol(ip)
+        self.add_all_tcp()
+        self.add_custom_tcp(port, ip)
+        self.add_custom_udp(min_port = 10, max_port = 100)
+
         self.click_button(text=B.CREATE_TEXT)
     
