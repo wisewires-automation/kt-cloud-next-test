@@ -71,15 +71,14 @@ def delete_sg_scenario(page: Page, log, sc: ScreenshotSession, sg_name: str):
 def create_inbound_scenario(page: Page, log, sc: ScreenshotSession, sg_name: str):
     sg_page = SGPage(page)
 
-    sg_page.open_project(project_name="QA-PROJECT-001")
-    sg_page.go_console_menu(S.SG_MENU)
+    # sg_page.open_project(project_name="QA-PROJECT-001")
+    # sg_page.go_console_menu(S.SG_MENU)
     
-    sg_name = "QA-AUTO-TEST"
-    ip = "10.0.0.0/8"
+    ip = "10.0.0.0/16"
     port = 20
 
     log.info("[TC-00] Security Group Inbound 생성 시작 | Security Group 이름=%s", sg_name)
-    sg_page.create_sg_inbound(sg_name, ip, port)
+    sg_page.create_inbound_rules(ip, port)
     log.info("[TC-00] Security Group Inbound 생성 완료")
 
     sc.snap(page, label="create_sg_inbound", delay_sec=1.0)
@@ -110,11 +109,12 @@ def main():
             new_name = f"{sg_name}-EDITED"
             sg_name = update_sg_scenario(page, log, sc, sg_name, new_name, desc=sg_desc)
 
+            # Inbound 규칙 생성
+            create_inbound_scenario(page, log, sc, sg_name)
+            
             # Security Group 삭제
             delete_sg_scenario(page, log, sc, sg_name)
 
-            # Inbound 규칙 생성
-            # create_inbound_scenario(page, log, sc, sg_name)
 
         except Exception:
             sc.snap(page, "error")
