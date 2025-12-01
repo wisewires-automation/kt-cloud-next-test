@@ -3,7 +3,7 @@ from pathlib import Path
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.nic_page import NICPage
 
 file_name = Path(__file__).stem

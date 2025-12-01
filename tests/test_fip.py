@@ -3,8 +3,8 @@ from playwright.sync_api import Page
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.common import ButtonLocators as B
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.common import ButtonLocators as B
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.fip_page import FIPPage
 
 file_name = Path(__file__).stem

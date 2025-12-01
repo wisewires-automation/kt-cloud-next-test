@@ -5,7 +5,7 @@ from typing import Dict, Any
 import yaml
 
 
-CONFIG_PATH = Path(__file__).resolve().parent / "data" / "volumes.yml"
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "volumes.yml"
 
 
 @dataclass

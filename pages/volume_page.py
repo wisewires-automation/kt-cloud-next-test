@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect, Locator
 from pages.base_page import BasePage
-from pages.locators.actions import CreateButtonLocators as C
+from pages.actions import CreateButtonLocators as C
 from utils.name_generator import generate_name
 
 class VolumePage(BasePage):

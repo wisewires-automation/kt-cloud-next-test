@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page
 from pages.base_page import BasePage
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 
 class SnapPage(BasePage):
     # ============================================================

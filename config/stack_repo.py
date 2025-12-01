@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 import yaml
 
-CONFIG_PATH = Path(__file__).resolve().parent / "data" / "stacks.yml"
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "data" / "stacks.yml"
 
 
 @dataclass

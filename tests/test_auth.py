@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from utils.playwright_helpers import create_page
 from utils.logger import get_logger
 from utils.screenshot import ScreenshotSession
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 from pages.auth_page import AuthPage
 
 load_dotenv()

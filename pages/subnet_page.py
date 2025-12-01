@@ -2,7 +2,7 @@
 
 from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
-from pages.locators.actions import CreateButtonLocators as C
+from pages.actions import CreateButtonLocators as C
 
 class SubnetPage(BasePage):
     # ============================================================

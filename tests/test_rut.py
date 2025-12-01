@@ -2,7 +2,7 @@ from playwright.sync_api import Page
 from pathlib import Path
 from utils.playwright_helpers import create_page, login_as_admin
 from utils.logger import get_logger
-from pages.locators.actions import SidebarLocators as S, CreateButtonLocators as C
+from pages.actions import SidebarLocators as S, CreateButtonLocators as C
 from utils.screenshot import ScreenshotSession
 
 from pages.rut_page import RUTPage
