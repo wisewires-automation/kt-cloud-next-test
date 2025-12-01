@@ -1,0 +1,10 @@
+#낫게이트웨이 데이터
+QA_NAT_GATEWAY_BASE:
+  provision: "auto"
+  name: "QA_NAT_GATEWAY_AUTO"
+  description: "자동화 테스트용 프로젝트"
+  project_key: "QA_PROJECT_BASE"
+  vpc_key: "QA_VPC_BASE"
+  subnet_key: "QA_SUBNET_AUTO"
+  rut_key: "QA-RUT-BASE"
+  ig_key: "QA-IG-BASE"

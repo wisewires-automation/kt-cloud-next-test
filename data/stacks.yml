@@ -10,6 +10,15 @@ TEST_STACK_FOR_SUBNET:
   vpc_key: "QA_VPC_BASE"
   subnet_key: "QA_SUBNET_AUTO"
 
+#nat gateway 생성용 데이터
+TEST_STACK_FOR_NATGATEWAY:
+  description: "nat gateway 생성/수정/삭제 테스트용 세트"
+  project_key: "QA-PROJECT-BASE"
+  vpc_key: "QA-VPC-BASE"
+  subnet_key: "QA-SUBNET-BASE"
+  rut_key: "QA-RUT-BASE"
+  ig_key: "QA-IG-BASE"
+  
 TEST_STACK_FOR_SG:
   description: "Security Group 생성/수정/삭제 테스트용 세트"
   project_key: "QA_PROJECT_BASE"
