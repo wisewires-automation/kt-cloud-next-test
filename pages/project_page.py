@@ -67,6 +67,11 @@ class ProjectPage(BasePage):
         return self.page.locator("button:has(span[aria-label='pen'])").first
     
     @property
+    def modified_buttton(self):
+        """"수정 버튼(펜) - 다른 방식"""
+        return self.page.get_by_role("img", name = "pen").first
+    
+    @property
     def search_all_button(self):
         """'전체 조회' 버튼"""
         return self.page.get_by_label(self.SEARCH_ALL_BUTTON_TEXT)
@@ -131,7 +136,11 @@ class ProjectPage(BasePage):
 
     def click_edit_button(self, timeout: int = 10000):
         """프로젝트 수정 버튼"""
-        btn = self.pen_project_button
+        #프로젝트 수정 버튼 클릭 오류 발생으로 인해 gey_by_role  방식으로 처리하여 통과
+        #btn = self.pen_project_button
+        time.sleep(3)
+        btn = self.modified_buttton
+        print("수정 버튼 클릭")
         expect(btn).to_be_visible(timeout=timeout)
         btn.click()
         
@@ -179,7 +188,7 @@ class ProjectPage(BasePage):
         self.click_search_all()
 
         # 이용중인 서비스 조회 후 대기
-        time.sleep(1)
+        time.sleep(6)
         self.delete_confirm()
 
         # TODO: 삭제 토스트 검증
